@@ -8,8 +8,9 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default function Home() {
-  const { player, login, logout } = usePlayer();
+  const { player, knownNames, login, logout } = usePlayer();
   const [name, setName] = useState("");
+  const [showNewName, setShowNewName] = useState(false);
   const [loading, setLoading] = useState(false);
   const [challenges, setChallenges] = useState<
     (Battle & { challenger: Player })[]
@@ -68,32 +69,70 @@ export default function Home() {
     setLoading(true);
     try {
       await login(name);
+      setName("");
+      setShowNewName(false);
     } finally {
       setLoading(false);
     }
   }
 
   if (!player) {
+    const showNameInput = showNewName || knownNames.length === 0;
+
     return (
       <div className="flex flex-col items-center gap-6 pt-8">
         <Image src="/logo.png" alt="Rechenheld" width={300} height={300} priority />
         <p className="text-xl text-gray-600">Wie heißt du?</p>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-          placeholder="Dein Name"
-          className="w-full text-2xl text-center py-4 px-6 border-2 border-sky-300 rounded-xl focus:outline-none focus:border-sky-500"
-          autoFocus
-        />
-        <button
-          onClick={handleLogin}
-          disabled={!name.trim() || loading}
-          className="w-full py-4 text-2xl font-bold bg-sky-500 text-white rounded-xl disabled:opacity-50 active:bg-sky-600"
-        >
-          Los geht&apos;s!
-        </button>
+
+        {!showNameInput && (
+          <div className="w-full space-y-3">
+            {knownNames.map((n) => (
+              <button
+                key={n}
+                onClick={() => { setName(n); login(n).finally(() => setLoading(false)); setLoading(true); }}
+                disabled={loading}
+                className="w-full py-4 text-2xl font-bold bg-sky-500 text-white rounded-xl disabled:opacity-50 active:bg-sky-600"
+              >
+                {n}
+              </button>
+            ))}
+            <button
+              onClick={() => setShowNewName(true)}
+              className="w-full py-4 text-2xl font-bold bg-white text-sky-500 border-2 border-sky-300 rounded-xl active:bg-sky-50"
+            >
+              Neuer Name…
+            </button>
+          </div>
+        )}
+
+        {showNameInput && (
+          <>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+              placeholder="Dein Name"
+              className="w-full text-2xl text-center py-4 px-6 border-2 border-sky-300 rounded-xl focus:outline-none focus:border-sky-500"
+              autoFocus
+            />
+            <button
+              onClick={handleLogin}
+              disabled={!name.trim() || loading}
+              className="w-full py-4 text-2xl font-bold bg-sky-500 text-white rounded-xl disabled:opacity-50 active:bg-sky-600"
+            >
+              Los geht&apos;s!
+            </button>
+            {knownNames.length > 0 && (
+              <button
+                onClick={() => setShowNewName(false)}
+                className="text-gray-400 underline text-sm"
+              >
+                Zurück zur Liste
+              </button>
+            )}
+          </>
+        )}
       </div>
     );
   }

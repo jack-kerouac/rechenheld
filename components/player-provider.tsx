@@ -10,14 +10,31 @@ import {
 import { Player } from "@/lib/types";
 import { supabase } from "@/lib/supabase";
 
+const NAMES_KEY = "rechenheld_known_names";
+
+function getKnownNames(): string[] {
+  const stored = localStorage.getItem(NAMES_KEY);
+  return stored ? JSON.parse(stored) : [];
+}
+
+function addKnownName(name: string) {
+  const names = getKnownNames();
+  if (!names.includes(name)) {
+    names.push(name);
+    localStorage.setItem(NAMES_KEY, JSON.stringify(names));
+  }
+}
+
 type PlayerContextType = {
   player: Player | null;
+  knownNames: string[];
   login: (name: string) => Promise<void>;
   logout: () => void;
 };
 
 const PlayerContext = createContext<PlayerContextType>({
   player: null,
+  knownNames: [],
   login: async () => {},
   logout: () => {},
 });
@@ -28,8 +45,10 @@ export function usePlayer() {
 
 export function PlayerProvider({ children }: { children: ReactNode }) {
   const [player, setPlayer] = useState<Player | null>(null);
+  const [knownNames, setKnownNames] = useState<string[]>([]);
 
   useEffect(() => {
+    setKnownNames(getKnownNames());
     const stored = localStorage.getItem("rechenheld_player");
     if (stored) {
       setPlayer(JSON.parse(stored));
@@ -50,6 +69,8 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     if (existing) {
       setPlayer(existing);
       localStorage.setItem("rechenheld_player", JSON.stringify(existing));
+      addKnownName(trimmed);
+      setKnownNames(getKnownNames());
       return;
     }
 
@@ -64,6 +85,8 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
     setPlayer(created);
     localStorage.setItem("rechenheld_player", JSON.stringify(created));
+    addKnownName(trimmed);
+    setKnownNames(getKnownNames());
   }
 
   function logout() {
@@ -72,7 +95,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <PlayerContext.Provider value={{ player, login, logout }}>
+    <PlayerContext.Provider value={{ player, knownNames, login, logout }}>
       {children}
     </PlayerContext.Provider>
   );
