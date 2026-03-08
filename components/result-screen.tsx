@@ -8,6 +8,7 @@ export function ResultScreen({
   elapsedMs,
   battleMode,
   leaderboardRank,
+  bestTimeDiffMs,
   numberRange,
   opMode,
 }: {
@@ -15,6 +16,7 @@ export function ResultScreen({
   elapsedMs: number;
   battleMode?: boolean;
   leaderboardRank?: number | null;
+  bestTimeDiffMs?: number | null;
   numberRange?: number;
   opMode?: OpMode;
 }) {
@@ -35,16 +37,19 @@ export function ResultScreen({
       </div>
       <div className="text-2xl text-gray-600">{seconds} Sekunden</div>
 
-      {leaderboardRank !== undefined && leaderboardRank !== null && (
+      {leaderboardRank != null && (
         <div className="px-4 py-3 bg-yellow-100 border-2 border-yellow-400 rounded-xl text-center">
           <div className="text-2xl font-bold">
-            {leaderboardRank === 1
-              ? "🥇 Platz 1 in der Bestenliste!"
-              : leaderboardRank === 2
-                ? "🥈 Platz 2 in der Bestenliste!"
-                : leaderboardRank === 3
-                  ? "🥉 Platz 3 in der Bestenliste!"
-                  : `Platz ${leaderboardRank} in der Bestenliste!`}
+            {leaderboardRank === 1 ? "🥇" : leaderboardRank === 2 ? "🥈" : leaderboardRank === 3 ? "🥉" : "🎉"}{" "}
+            Neue Bestzeit! Platz {leaderboardRank} in der Bestenliste!
+          </div>
+        </div>
+      )}
+
+      {bestTimeDiffMs != null && bestTimeDiffMs > 0 && (
+        <div className="px-4 py-3 bg-gray-100 border-2 border-gray-300 rounded-xl text-center">
+          <div className="text-xl text-gray-600">
+            {(bestTimeDiffMs / 1000).toFixed(1).replace(".", ",")} Sekunden langsamer als deine Bestzeit
           </div>
         </div>
       )}

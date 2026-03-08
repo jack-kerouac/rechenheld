@@ -8,11 +8,22 @@ import { Round } from "@/lib/types";
 import { ResultScreen } from "@/components/result-screen";
 import Link from "next/link";
 
+function parseIntervalMs(interval: string): number {
+  const match = interval.match(/(\d+):(\d+):(\d+)\.?(\d*)/);
+  if (!match) return 0;
+  const hours = parseInt(match[1]);
+  const minutes = parseInt(match[2]);
+  const seconds = parseInt(match[3]);
+  const frac = match[4] ? parseInt(match[4].padEnd(3, "0").slice(0, 3)) : 0;
+  return (hours * 3600 + minutes * 60 + seconds) * 1000 + frac;
+}
+
 export default function RoundResultPage() {
   const { id } = useParams<{ id: string }>();
   const { player } = usePlayer();
   const [round, setRound] = useState<Round | null>(null);
   const [leaderboardRank, setLeaderboardRank] = useState<number | null>(null);
+  const [bestTimeDiffMs, setBestTimeDiffMs] = useState<number | null>(null);
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
@@ -40,7 +51,19 @@ export default function RoundResultPage() {
           .order("best_time", { ascending: true });
         if (board) {
           const rank = board.findIndex((e) => e.player_id === player.id);
-          if (rank !== -1) setLeaderboardRank(rank + 1);
+          if (rank !== -1) {
+            const bestTimeMs = parseIntervalMs(board[rank].best_time);
+            const roundMs =
+              new Date(data.finished_at).getTime() -
+              new Date(data.started_at).getTime();
+            const diff = roundMs - bestTimeMs;
+            if (diff <= 0) {
+              // New best or first entry — show rank
+              setLeaderboardRank(rank + 1);
+            } else {
+              setBestTimeDiffMs(diff);
+            }
+          }
         }
       }
     }
@@ -72,6 +95,7 @@ export default function RoundResultPage() {
         calculations={round.calculations}
         elapsedMs={elapsedMs}
         leaderboardRank={leaderboardRank}
+        bestTimeDiffMs={bestTimeDiffMs}
         numberRange={round.number_range}
         opMode={round.op_mode}
       />
