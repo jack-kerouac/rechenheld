@@ -227,7 +227,7 @@ export default function BattlePage() {
       <div className="flex flex-col items-center gap-6 pt-12">
         <h1 className="text-3xl font-bold">Warte auf Gegner...</h1>
         <p className="text-xl">
-          Dein Ergebnis: {myCorrect} von 10 richtig in {myTime}s
+          Dein Ergebnis: {myCorrect} von 10 richtig in {myTime} Sekunden
         </p>
         <div className="animate-pulse text-4xl">⏳</div>
         <Link
@@ -296,8 +296,8 @@ export default function BattlePage() {
           })}
           <tr className="bg-gray-100 font-bold border-t-2 border-gray-300">
             <td className="py-2.5 text-left pl-3">Zeit</td>
-            <td className="py-2.5">{myTime.toFixed(1).replace(".", ",")}s</td>
-            <td className="py-2.5">{opTime.toFixed(1).replace(".", ",")}s</td>
+            <td className="py-2.5">{myTime.toFixed(1).replace(".", ",")} Sekunden</td>
+            <td className="py-2.5">{opTime.toFixed(1).replace(".", ",")} Sekunden</td>
           </tr>
           <tr className="bg-gray-100 font-bold">
             <td className="py-2.5 text-left pl-3">Richtig</td>
@@ -310,8 +310,8 @@ export default function BattlePage() {
       {timeDiff !== 0 && (
         <p className="text-sm text-gray-500">
           {timeDiff < 0
-            ? `Du warst ${Math.abs(timeDiff).toFixed(1).replace(".", ",")}s schneller`
-            : `${opLabel} war ${timeDiff.toFixed(1).replace(".", ",")}s schneller`}
+            ? `Du warst ${Math.abs(timeDiff).toFixed(1).replace(".", ",")} Sekunden schneller`
+            : `${opLabel} war ${timeDiff.toFixed(1).replace(".", ",")} Sekunden schneller`}
         </p>
       )}
 

@@ -13,7 +13,7 @@ const OP_MODES: { value: OpMode; label: string }[] = [
 ];
 
 function formatInterval(interval: string): string {
-  // PostgreSQL interval like "00:00:12.345" → "12,3s"
+  // PostgreSQL interval like "00:00:12.345" → "12,3 Sekunden"
   const match = interval.match(/(\d+):(\d+):(\d+)\.?(\d*)/);
   if (!match) return interval;
   const hours = parseInt(match[1]);
@@ -21,7 +21,7 @@ function formatInterval(interval: string): string {
   const seconds = parseInt(match[3]);
   const frac = match[4] ? match[4].slice(0, 1) : "0";
   const totalSeconds = hours * 3600 + minutes * 60 + seconds;
-  return `${totalSeconds},${frac}s`;
+  return `${totalSeconds},${frac} Sekunden`;
 }
 
 function formatDate(dateStr: string): string {
