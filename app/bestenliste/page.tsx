@@ -25,14 +25,11 @@ function formatInterval(interval: string): string {
 }
 
 function formatDate(dateStr: string): string {
-  return new Date(dateStr).toLocaleDateString("de-DE", {
+  return new Date(dateStr + "T00:00:00").toLocaleDateString("de-DE", {
     weekday: "long",
     day: "numeric",
     month: "long",
     year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    timeZone: "Europe/Berlin",
   });
 }
 
@@ -132,7 +129,7 @@ function BestenlisteContent() {
             >
               <span className="font-bold w-8">{i + 1}.</span>
               <span className="flex-1">
-                {i < 3 && ["🥇", "🥈", "🥉"][i]} {entry.name}
+                {entry.name}
               </span>
               <span className="text-sm text-gray-500 mr-3">
                 {formatDate(entry.best_date)}
