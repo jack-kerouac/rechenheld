@@ -22,6 +22,7 @@ export type Round = {
   id: string;
   player_id: string;
   number_range: number;
+  op_mode: OpMode;
   started_at: string;
   finished_at: string | null;
   correct_count: number | null;

@@ -1,44 +1,38 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { usePlayer } from "@/components/player-provider";
 import { generateCalculations } from "@/lib/math";
 import { CalculationWithInput, OpMode } from "@/lib/types";
 import { CalculationCard } from "@/components/calculation-card";
-import { ResultScreen } from "@/components/result-screen";
 import { Timer } from "@/components/timer";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-type Phase = "setup" | "solving" | "done";
+type Phase = "setup" | "solving";
 
 const RANGES = [10, 20, 30];
 const COUNT = 10;
 
 export default function UebenPage() {
   const { player } = usePlayer();
+  const router = useRouter();
   const [phase, setPhase] = useState<Phase>("setup");
   const [opMode, setOpMode] = useState<OpMode | "">("");
   const [calculations, setCalculations] = useState<CalculationWithInput[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [startedAt, setStartedAt] = useState<Date | null>(null);
-  const [elapsedMs, setElapsedMs] = useState(0);
   const [numberRange, setNumberRange] = useState(0);
-  const [leaderboardRank, setLeaderboardRank] = useState<number | null>(null);
 
   function startRound() {
     if (!opMode || !numberRange) return;
     const calcs = generateCalculations(numberRange, COUNT, opMode);
     setCalculations(calcs.map((c) => ({ ...c })));
     setCurrentIndex(0);
-    setLeaderboardRank(null);
     setStartedAt(new Date());
     setPhase("solving");
   }
-
-  const handleElapsed = useCallback((ms: number) => {
-    setElapsedMs(ms);
-  }, []);
 
   async function handleAnswer(answer: number) {
     const updated = [...calculations];
@@ -48,16 +42,14 @@ export default function UebenPage() {
     if (currentIndex + 1 < COUNT) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      setPhase("done");
       const finishedAt = new Date();
-      setElapsedMs(finishedAt.getTime() - startedAt!.getTime());
 
       const correctCount = updated.filter(
         (c) => c.playerAnswer === c.answer
       ).length;
 
       if (player) {
-        await supabase.from("rounds").insert({
+        const { data } = await supabase.from("rounds").insert({
           player_id: player.id,
           number_range: numberRange,
           op_mode: opMode,
@@ -65,20 +57,11 @@ export default function UebenPage() {
           finished_at: finishedAt.toISOString(),
           correct_count: correctCount,
           calculations: updated,
-        });
+        }).select("id").single();
 
-        // Check leaderboard position if perfect round
-        if (correctCount === COUNT) {
-          const { data: board } = await supabase
-            .from("leaderboard")
-            .select("player_id, best_time")
-            .eq("number_range", numberRange)
-            .eq("op_mode", opMode)
-            .order("best_time", { ascending: true });
-          if (board) {
-            const rank = board.findIndex((e) => e.player_id === player.id);
-            if (rank !== -1) setLeaderboardRank(rank + 1);
-          }
+        if (data) {
+          router.push(`/ueben/${data.id}`);
+          return;
         }
       }
     }
@@ -154,17 +137,9 @@ export default function UebenPage() {
     );
   }
 
-  if (phase === "done") {
-    return (
-      <div className="pt-8">
-        <ResultScreen calculations={calculations} elapsedMs={elapsedMs} leaderboardRank={leaderboardRank} numberRange={numberRange} opMode={opMode || undefined} />
-      </div>
-    );
-  }
-
   return (
     <div className="flex flex-col items-center gap-6 pt-4">
-      <Timer running={phase === "solving"} onElapsed={handleElapsed} />
+      <Timer running={phase === "solving"} />
       <CalculationCard
         key={currentIndex}
         calculation={calculations[currentIndex]}
