@@ -60,7 +60,7 @@ export function CalculationCard({
         </span>
       </div>
 
-      <div className="grid grid-cols-3 gap-3 w-[320px] mt-4" style={{ touchAction: "manipulation" }}>
+      <div className="grid grid-cols-3 gap-3 w-[320px] mt-4" style={{ touchAction: "none" }}>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
           <button
             key={n}
