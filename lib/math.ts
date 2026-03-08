@@ -5,33 +5,36 @@ export function generateCalculations(
   count: number,
   opMode: OpMode = "plus-minus"
 ): Calculation[] {
-  const calculations: Calculation[] = [];
-
-  for (let i = 0; i < count; i++) {
-    calculations.push(generateOneCalculation(range, opMode));
-  }
-
-  return calculations;
+  const pool = buildPool(range, opMode);
+  shuffle(pool);
+  return pool.slice(0, count);
 }
 
-function generateOneCalculation(range: number, opMode: OpMode): Calculation {
-  const op: Op = opMode === "plus" ? "+" : Math.random() < 0.5 ? "+" : "-";
+function buildPool(range: number, opMode: OpMode): Calculation[] {
+  const pool: Calculation[] = [];
 
-  if (op === "+") {
-    // a + b = answer, where answer <= range, a >= 0, b >= 0
-    const answer = randomInt(0, range);
-    const a = randomInt(0, answer);
-    const b = answer - a;
-    return { a, b, op, answer };
-  } else {
-    // a - b = answer, where a <= range, answer >= 0
-    const a = randomInt(0, range);
-    const b = randomInt(0, a);
-    const answer = a - b;
-    return { a, b, op, answer };
+  if (opMode === "plus" || opMode === "plus-minus") {
+    for (let a = 0; a <= range; a++) {
+      for (let b = 0; b <= range - a; b++) {
+        pool.push({ a, b, op: "+", answer: a + b });
+      }
+    }
   }
+
+  if (opMode === "plus-minus") {
+    for (let a = 0; a <= range; a++) {
+      for (let b = 0; b <= a; b++) {
+        pool.push({ a, b, op: "-", answer: a - b });
+      }
+    }
+  }
+
+  return pool;
 }
 
-function randomInt(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+function shuffle(arr: unknown[]): void {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
 }
