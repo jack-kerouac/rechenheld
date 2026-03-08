@@ -147,6 +147,12 @@ export default function UebenPage() {
         total={COUNT}
         onAnswer={handleAnswer}
       />
+      <button
+        onClick={() => setPhase("setup")}
+        className="px-6 py-3 text-xl font-bold bg-gray-200 text-gray-500 rounded-xl active:bg-gray-300"
+      >
+        Abbrechen
+      </button>
     </div>
   );
 }
