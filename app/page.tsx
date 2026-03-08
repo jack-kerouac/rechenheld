@@ -45,8 +45,7 @@ export default function Home() {
     const { data: battles } = await supabase
       .from("battles")
       .select("*, challenger:players!battles_challenger_id_fkey(*)")
-      .eq("opponent_id", player.id)
-      .in("status", ["pending", "accepted"]);
+      .eq("opponent_id", player.id);
     if (!battles || battles.length === 0) {
       setChallenges([]);
       return;

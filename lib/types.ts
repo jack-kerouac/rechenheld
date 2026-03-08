@@ -36,7 +36,6 @@ export type Battle = {
   number_range: number;
   op_mode: OpMode;
   calculations: Calculation[];
-  status: "pending" | "accepted" | "finished";
   created_at: string;
 };
 

@@ -144,20 +144,6 @@ export default function BattlePage() {
         battle_id: id,
       });
 
-      // Update battle status
-      const isChallenger = battle!.challenger_id === player!.id;
-      if (!isChallenger) {
-        await supabase
-          .from("battles")
-          .update({ status: "finished" })
-          .eq("id", id);
-      } else {
-        await supabase
-          .from("battles")
-          .update({ status: "accepted" })
-          .eq("id", id);
-      }
-
       await loadBattle();
     }
   }

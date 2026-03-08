@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { usePlayer } from "@/components/player-provider";
 import { supabase } from "@/lib/supabase";
 import { generateCalculations } from "@/lib/math";
-import { Battle, OpMode, Player } from "@/lib/types";
+import { Battle, OpMode, Player, Round } from "@/lib/types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -15,7 +15,7 @@ export default function DuellPage() {
   const router = useRouter();
   const [players, setPlayers] = useState<Player[]>([]);
   const [battles, setBattles] = useState<
-    (Battle & { challenger: Player; opponent: Player | null })[]
+    (Battle & { challenger: Player; opponent: Player | null; rounds: Round[] })[]
   >([]);
   const [creating, setCreating] = useState(false);
   const [selectedOpponent, setSelectedOpponent] = useState<string>("");
@@ -34,7 +34,7 @@ export default function DuellPage() {
       supabase
         .from("battles")
         .select(
-          "*, challenger:players!battles_challenger_id_fkey(*), opponent:players!battles_opponent_id_fkey(*)"
+          "*, challenger:players!battles_challenger_id_fkey(*), opponent:players!battles_opponent_id_fkey(*), rounds(*)"
         )
         .or(`challenger_id.eq.${player!.id},opponent_id.eq.${player!.id}`)
         .order("created_at", { ascending: false })
@@ -47,6 +47,7 @@ export default function DuellPage() {
         battlesData as (Battle & {
           challenger: Player;
           opponent: Player | null;
+          rounds: Round[];
         })[]
       );
   }
@@ -64,7 +65,6 @@ export default function DuellPage() {
         number_range: selectedRange,
         op_mode: selectedOpMode,
         calculations: calcs,
-        status: "pending",
       })
       .select("id")
       .single();
@@ -188,6 +188,26 @@ export default function DuellPage() {
             const otherName = isChallenger
               ? b.opponent?.name
               : b.challenger.name;
+            const iPlayed = b.rounds.some((r) => r.player_id === player.id);
+            const opponentPlayed = b.rounds.some((r) => r.player_id !== player.id);
+            const bothPlayed = iPlayed && opponentPlayed;
+
+            let badgeClass: string;
+            let badgeLabel: string;
+            if (bothPlayed) {
+              badgeClass = "bg-green-200";
+              badgeLabel = "Fertig";
+            } else if (iPlayed) {
+              badgeClass = "bg-blue-200";
+              badgeLabel = `Warte auf ${otherName}`;
+            } else if (opponentPlayed) {
+              badgeClass = "bg-orange-200";
+              badgeLabel = "Du bist dran!";
+            } else {
+              badgeClass = "bg-yellow-200";
+              badgeLabel = "Offen";
+            }
+
             return (
               <Link
                 key={b.id}
@@ -208,24 +228,8 @@ export default function DuellPage() {
                       {new Date(b.created_at).toLocaleDateString("de-DE", { weekday: "long", day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Berlin" })}
                     </div>
                   </div>
-                  <span
-                    className={`text-sm font-bold px-2 py-1 rounded ${
-                      b.status === "pending"
-                        ? "bg-yellow-200"
-                        : b.status === "accepted"
-                          ? isChallenger
-                            ? "bg-blue-200"
-                            : "bg-orange-200"
-                          : "bg-green-200"
-                    }`}
-                  >
-                    {b.status === "pending"
-                      ? "Offen"
-                      : b.status === "accepted"
-                        ? isChallenger
-                          ? `Warte auf ${otherName}`
-                          : "Du bist dran!"
-                        : "Fertig"}
+                  <span className={`text-sm font-bold px-2 py-1 rounded ${badgeClass}`}>
+                    {badgeLabel}
                   </span>
                 </div>
               </Link>

@@ -13,7 +13,6 @@ create table battles (
   opponent_id uuid references players(id),
   number_range int not null,
   calculations jsonb not null,
-  status text not null default 'pending',
   created_at timestamptz not null default now()
 );
 
@@ -50,7 +49,6 @@ create policy "Anyone can insert players" on players for insert with check (true
 
 create policy "Anyone can read battles" on battles for select using (true);
 create policy "Anyone can insert battles" on battles for insert with check (true);
-create policy "Anyone can update battles" on battles for update using (true);
 
 create policy "Anyone can read rounds" on rounds for select using (true);
 create policy "Anyone can insert rounds" on rounds for insert with check (true);
