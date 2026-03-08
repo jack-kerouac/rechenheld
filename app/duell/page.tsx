@@ -181,7 +181,7 @@ export default function DuellPage() {
       )}
 
       {battles.length > 0 && (
-        <div className="w-full space-y-3 mt-4">
+        <div className="w-full space-y-2 mt-4">
           <h2 className="text-xl font-bold">Letzte Duelle</h2>
           {battles.map((b) => {
             const isChallenger = b.challenger_id === player.id;
@@ -192,7 +192,7 @@ export default function DuellPage() {
               <Link
                 key={b.id}
                 href={`/duell/${b.id}`}
-                className="block w-full p-4 bg-white rounded-xl border"
+                className="block w-full px-4 py-3 bg-gray-100 rounded-xl"
               >
                 <div className="flex justify-between items-center">
                   <div>
