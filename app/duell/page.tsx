@@ -198,8 +198,12 @@ export default function DuellPage() {
                   <div>
                     <span className="text-lg">
                       {isChallenger ? "Du" : b.challenger.name} gegen{" "}
-                      {isChallenger ? otherName : "Dich"} — {b.op_mode === "plus" ? "Nur +" : "+ und −"}, bis {b.number_range}
+                      {isChallenger ? otherName : "Dich"}
                     </span>
+                    <div className="flex gap-1 mt-1">
+                      <span className="text-sm bg-purple-100 text-purple-700 px-2 py-0.5 rounded font-medium">{b.op_mode === "plus" ? "Nur +" : "+ und −"}</span>
+                      <span className="text-sm bg-teal-100 text-teal-700 px-2 py-0.5 rounded font-medium">Bis {b.number_range}</span>
+                    </div>
                     <div className="text-sm text-gray-400">
                       {new Date(b.created_at).toLocaleDateString("de-DE", { weekday: "long", day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Berlin" })}
                     </div>
