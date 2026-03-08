@@ -119,7 +119,7 @@ export default function DuellPage() {
             <>
               <h2 className="text-xl font-bold mt-4">Rechenart:</h2>
               <div className="flex gap-2">
-                {([["plus", "Nur + "], ["plus-minus", "+ und −"]] as const).map(([mode, label]) => (
+                {([["plus", "Nur +"], ["plus-minus", "+ und −"]] as const).map(([mode, label]) => (
                   <button
                     key={mode}
                     onClick={() => setSelectedOpMode(mode)}

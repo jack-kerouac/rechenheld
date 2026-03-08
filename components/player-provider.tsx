@@ -66,25 +66,21 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       .eq("name", trimmed)
       .single();
 
+    let p: Player;
     if (existing) {
-      setPlayer(existing);
-      localStorage.setItem("rechenheld_player", JSON.stringify(existing));
-      addKnownName(trimmed);
-      setKnownNames(getKnownNames());
-      return;
+      p = existing;
+    } else {
+      const { data: created, error } = await supabase
+        .from("players")
+        .insert({ name: trimmed })
+        .select("id, name")
+        .single();
+      if (error) throw error;
+      p = created;
     }
 
-    // Create new player
-    const { data: created, error } = await supabase
-      .from("players")
-      .insert({ name: trimmed })
-      .select("id, name")
-      .single();
-
-    if (error) throw error;
-
-    setPlayer(created);
-    localStorage.setItem("rechenheld_player", JSON.stringify(created));
+    setPlayer(p);
+    localStorage.setItem("rechenheld_player", JSON.stringify(p));
     addKnownName(trimmed);
     setKnownNames(getKnownNames());
   }

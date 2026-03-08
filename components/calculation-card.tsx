@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Calculation } from "@/lib/types";
 
 export function CalculationCard({
@@ -15,7 +15,24 @@ export function CalculationCard({
   onAnswer: (answer: number) => void;
 }) {
   const [input, setInput] = useState("");
-  const containerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef(input);
+  inputRef.current = input;
+  const onAnswerRef = useRef(onAnswer);
+  onAnswerRef.current = onAnswer;
+
+  const handleKey = useCallback((key: string) => {
+    if (key === "backspace") {
+      setInput((prev) => prev.slice(0, -1));
+    } else if (key === "ok") {
+      if (inputRef.current !== "") {
+        onAnswerRef.current(parseInt(inputRef.current, 10));
+        setInput("");
+      }
+    } else {
+      // Max 2 digits (range up to 30)
+      setInput((prev) => (prev.length < 2 ? prev + key : prev));
+    }
+  }, []);
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
@@ -29,23 +46,7 @@ export function CalculationCard({
     }
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  });
-
-  function handleKey(key: string) {
-    if (key === "backspace") {
-      setInput((prev) => prev.slice(0, -1));
-    } else if (key === "ok") {
-      if (input !== "") {
-        onAnswer(parseInt(input, 10));
-        setInput("");
-      }
-    } else {
-      // Max 2 digits (range up to 30)
-      if (input.length < 2) {
-        setInput((prev) => prev + key);
-      }
-    }
-  }
+  }, [handleKey]);
 
   return (
     <div className="flex flex-col items-center gap-6">

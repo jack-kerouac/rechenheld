@@ -36,24 +36,20 @@ export default function BattlePage() {
     if (!battleData) return;
     setBattle(battleData as Battle);
 
-    // Look up opponent name
     const b = battleData as Battle;
     const opponentId =
       b.challenger_id === player.id ? b.opponent_id : b.challenger_id;
-    if (opponentId) {
-      const { data: opponentData } = await supabase
-        .from("players")
-        .select("name")
-        .eq("id", opponentId)
-        .single();
-      if (opponentData) setOpponentName(opponentData.name);
-    }
 
-    // Load rounds for this battle
-    const { data: rounds } = await supabase
-      .from("rounds")
-      .select("*")
-      .eq("battle_id", id);
+    // Load opponent name and rounds in parallel
+    const [opponentResult, roundsResult] = await Promise.all([
+      opponentId
+        ? supabase.from("players").select("name").eq("id", opponentId).single()
+        : Promise.resolve({ data: null }),
+      supabase.from("rounds").select("*").eq("battle_id", id),
+    ]);
+
+    if (opponentResult.data) setOpponentName(opponentResult.data.name);
+    const rounds = roundsResult.data;
 
     const myR = rounds?.find((r: Round) => r.player_id === player.id) ?? null;
     const opR =

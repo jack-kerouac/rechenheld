@@ -13,12 +13,19 @@ export function Timer({
   const startRef = useRef<number | null>(null);
   const rafRef = useRef<number>(0);
 
+  const lastTenthRef = useRef(-1);
+
   useEffect(() => {
     if (running) {
       startRef.current = Date.now();
+      lastTenthRef.current = -1;
       const tick = () => {
         const ms = Date.now() - startRef.current!;
-        setElapsed(ms);
+        const tenth = Math.floor(ms / 100);
+        if (tenth !== lastTenthRef.current) {
+          lastTenthRef.current = tenth;
+          setElapsed(ms);
+        }
         rafRef.current = requestAnimationFrame(tick);
       };
       rafRef.current = requestAnimationFrame(tick);
