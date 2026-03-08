@@ -188,8 +188,10 @@ export default function BattlePage() {
             Gegen <span className="font-bold">{opponentName}</span>
           </p>
         )}
-        <p className="text-xl">{opModeLabel}</p>
-        <p className="text-xl">Zahlenraum bis {battle?.number_range}</p>
+        <div className="flex gap-2">
+          <span className="text-sm bg-purple-100 text-purple-700 px-2 py-0.5 rounded font-medium">{opModeLabel}</span>
+          <span className="text-sm bg-teal-100 text-teal-700 px-2 py-0.5 rounded font-medium">Bis {battle?.number_range}</span>
+        </div>
         <p className="text-lg text-gray-500">
           {calculations.length} Aufgaben
         </p>
