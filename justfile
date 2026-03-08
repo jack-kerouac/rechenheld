@@ -1,3 +1,7 @@
+# Run the app locally
+dev:
+    npm run dev
+
 # Deploy Supabase migrations
 deploy-db:
     npx supabase db push
