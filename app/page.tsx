@@ -126,7 +126,7 @@ export default function Home() {
             {knownNames.length > 0 && (
               <button
                 onClick={() => setShowNewName(false)}
-                className="text-gray-400 underline text-sm"
+                className="px-6 py-3 text-xl font-bold bg-gray-200 text-gray-500 rounded-xl active:bg-gray-300"
               >
                 Zurück zur Liste
               </button>
@@ -194,7 +194,7 @@ export default function Home() {
 
       <button
         onClick={logout}
-        className="mt-8 text-gray-400 underline text-sm"
+        className="mt-8 px-6 py-3 text-xl font-bold bg-gray-200 text-gray-500 rounded-xl active:bg-gray-300"
       >
         Abmelden
       </button>

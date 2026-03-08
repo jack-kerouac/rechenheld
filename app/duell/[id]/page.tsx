@@ -199,7 +199,7 @@ export default function BattlePage() {
         >
           Start!
         </button>
-        <Link href="/duell" className="text-gray-500 underline">
+        <Link href="/duell" className="px-6 py-3 text-xl font-bold bg-gray-200 text-gray-500 rounded-xl active:bg-gray-300">
           Zurück
         </Link>
       </div>

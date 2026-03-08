@@ -145,7 +145,7 @@ function BestenlisteContent() {
         </div>
       )}
 
-      <Link href="/" className="mt-4 text-gray-500 underline">
+      <Link href="/" className="mt-4 px-6 py-3 text-xl font-bold bg-gray-200 text-gray-500 rounded-xl active:bg-gray-300">
         Zurück
       </Link>
     </div>
