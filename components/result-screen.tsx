@@ -1,6 +1,6 @@
 "use client";
 
-import { CalculationWithInput } from "@/lib/types";
+import { CalculationWithInput, OpMode } from "@/lib/types";
 import Link from "next/link";
 
 export function ResultScreen({
@@ -8,11 +8,15 @@ export function ResultScreen({
   elapsedMs,
   battleMode,
   leaderboardRank,
+  numberRange,
+  opMode,
 }: {
   calculations: CalculationWithInput[];
   elapsedMs: number;
   battleMode?: boolean;
   leaderboardRank?: number | null;
+  numberRange?: number;
+  opMode?: OpMode;
 }) {
   const correct = calculations.filter(
     (c) => c.playerAnswer === c.answer
@@ -79,7 +83,11 @@ export function ResultScreen({
             Nochmal!
           </Link>
           <Link
-            href="/bestenliste"
+            href={
+              numberRange && opMode
+                ? `/bestenliste?range=${numberRange}&op=${opMode}`
+                : "/bestenliste"
+            }
             className="px-6 py-3 bg-yellow-400 text-xl font-bold rounded-xl"
           >
             Bestenliste

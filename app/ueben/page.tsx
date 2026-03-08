@@ -153,7 +153,7 @@ export default function UebenPage() {
   if (phase === "done") {
     return (
       <div className="pt-8">
-        <ResultScreen calculations={calculations} elapsedMs={elapsedMs} leaderboardRank={leaderboardRank} />
+        <ResultScreen calculations={calculations} elapsedMs={elapsedMs} leaderboardRank={leaderboardRank} numberRange={numberRange} opMode={opMode} />
       </div>
     );
   }

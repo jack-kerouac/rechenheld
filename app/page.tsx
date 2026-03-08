@@ -185,7 +185,7 @@ export default function Home() {
           )}
         </Link>
         <Link
-          href="/bestenliste"
+          href="/bestenliste?range=10&op=plus"
           className="block w-full py-5 text-2xl font-bold text-center bg-amber-400 rounded-xl active:bg-amber-500"
         >
           🏆 Bestenliste

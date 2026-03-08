@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { LeaderboardEntry, OpMode } from "@/lib/types";
 import Link from "next/link";
@@ -35,10 +36,28 @@ function formatDate(dateStr: string): string {
   });
 }
 
-export default function BestenlistePage() {
-  const [range, setRange] = useState(10);
-  const [opMode, setOpMode] = useState<OpMode>("plus");
+function BestenlisteContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const initialRange = Number(searchParams.get("range")) || 10;
+  const initialOp = (searchParams.get("op") as OpMode) || "plus";
+
+  const [range, setRange] = useState(
+    RANGES.includes(initialRange) ? initialRange : 10
+  );
+  const [opMode, setOpMode] = useState<OpMode>(
+    OP_MODES.some((m) => m.value === initialOp) ? initialOp : "plus"
+  );
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
+
+  function updateFilter(newRange: number, newOp: OpMode) {
+    setRange(newRange);
+    setOpMode(newOp);
+    router.replace(`/bestenliste?range=${newRange}&op=${newOp}`, {
+      scroll: false,
+    });
+  }
 
   useEffect(() => {
     loadLeaderboard();
@@ -64,7 +83,7 @@ export default function BestenlistePage() {
         {OP_MODES.map((m) => (
           <button
             key={m.value}
-            onClick={() => setOpMode(m.value)}
+            onClick={() => updateFilter(range, m.value)}
             className={`px-4 py-2 text-lg font-bold rounded-xl ${
               opMode === m.value
                 ? "bg-yellow-400"
@@ -80,7 +99,7 @@ export default function BestenlistePage() {
         {RANGES.map((r) => (
           <button
             key={r}
-            onClick={() => setRange(r)}
+            onClick={() => updateFilter(r, opMode)}
             className={`px-4 py-2 text-lg font-bold rounded-xl ${
               range === r
                 ? "bg-yellow-400"
@@ -130,5 +149,13 @@ export default function BestenlistePage() {
         Zurück
       </Link>
     </div>
+  );
+}
+
+export default function BestenlistePage() {
+  return (
+    <Suspense>
+      <BestenlisteContent />
+    </Suspense>
   );
 }
