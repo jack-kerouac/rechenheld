@@ -197,11 +197,11 @@ export default function DuellPage() {
                 <div className="flex justify-between items-center">
                   <div>
                     <span className="text-lg">
-                      {isChallenger ? "Du" : b.challenger.name} vs{" "}
+                      {isChallenger ? "Du" : b.challenger.name} gegen{" "}
                       {isChallenger ? otherName : "Du"} — bis {b.number_range}
                     </span>
                     <span className="text-sm text-gray-400 ml-2">
-                      {new Date(b.created_at).toLocaleDateString("de-DE", { day: "numeric", month: "numeric" })}
+                      {new Date(b.created_at).toLocaleDateString("de-DE", { weekday: "long", day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Berlin" })}
                     </span>
                   </div>
                   <span

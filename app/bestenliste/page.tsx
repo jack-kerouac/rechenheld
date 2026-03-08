@@ -24,8 +24,15 @@ function formatInterval(interval: string): string {
 }
 
 function formatDate(dateStr: string): string {
-  const d = new Date(dateStr);
-  return `${d.getDate()}.${d.getMonth() + 1}.`;
+  return new Date(dateStr).toLocaleDateString("de-DE", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Europe/Berlin",
+  });
 }
 
 export default function BestenlistePage() {
@@ -85,7 +92,7 @@ export default function BestenlistePage() {
         ))}
       </div>
 
-      <p className="text-sm text-gray-500">Nur perfekte Runden (10/10)</p>
+      <p className="text-sm text-gray-500">Nur perfekte Runden (10 von 10 richtig)</p>
 
       {entries.length === 0 ? (
         <p className="text-xl text-gray-400 mt-8">Noch keine Einträge!</p>

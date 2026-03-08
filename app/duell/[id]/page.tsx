@@ -22,6 +22,7 @@ export default function BattlePage() {
   const [elapsedMs, setElapsedMs] = useState(0);
   const [myRound, setMyRound] = useState<Round | null>(null);
   const [opponentRound, setOpponentRound] = useState<Round | null>(null);
+  const [opponentName, setOpponentName] = useState<string | null>(null);
 
   const loadBattle = useCallback(async () => {
     if (!player) return;
@@ -34,6 +35,19 @@ export default function BattlePage() {
 
     if (!battleData) return;
     setBattle(battleData as Battle);
+
+    // Look up opponent name
+    const b = battleData as Battle;
+    const opponentId =
+      b.challenger_id === player.id ? b.opponent_id : b.challenger_id;
+    if (opponentId) {
+      const { data: opponentData } = await supabase
+        .from("players")
+        .select("name")
+        .eq("id", opponentId)
+        .single();
+      if (opponentData) setOpponentName(opponentData.name);
+    }
 
     // Load rounds for this battle
     const { data: rounds } = await supabase
@@ -163,10 +177,18 @@ export default function BattlePage() {
     return <div className="text-center pt-12 text-xl">Laden...</div>;
   }
 
+  const opModeLabel = battle?.op_mode === "plus" ? "Nur +" : "+ und −";
+
   if (phase === "ready") {
     return (
       <div className="flex flex-col items-center gap-6 pt-12">
         <h1 className="text-3xl font-bold">Duell</h1>
+        {opponentName && (
+          <p className="text-xl">
+            Gegen <span className="font-bold">{opponentName}</span>
+          </p>
+        )}
+        <p className="text-xl">{opModeLabel}</p>
         <p className="text-xl">Zahlenraum bis {battle?.number_range}</p>
         <p className="text-lg text-gray-500">
           {calculations.length} Aufgaben
@@ -217,7 +239,7 @@ export default function BattlePage() {
       <div className="flex flex-col items-center gap-6 pt-12">
         <h1 className="text-3xl font-bold">Warte auf Gegner...</h1>
         <p className="text-xl">
-          Dein Ergebnis: {myCorrect}/10 in {myTime}s
+          Dein Ergebnis: {myCorrect} von 10 richtig in {myTime}s
         </p>
         <div className="animate-pulse text-4xl">⏳</div>
         <Link
@@ -262,12 +284,12 @@ export default function BattlePage() {
       <div className="w-full grid grid-cols-2 gap-4 text-center">
         <div className="p-4 bg-blue-100 rounded-xl">
           <div className="font-bold text-lg">Du</div>
-          <div className="text-2xl font-bold">{myCorrect}/10</div>
+          <div className="text-2xl font-bold">{myCorrect} von 10 richtig</div>
           <div className="text-lg">{myTime.toFixed(1)}s</div>
         </div>
         <div className="p-4 bg-amber-100 rounded-xl">
           <div className="font-bold text-lg">Gegner</div>
-          <div className="text-2xl font-bold">{opCorrect}/10</div>
+          <div className="text-2xl font-bold">{opCorrect} von 10 richtig</div>
           <div className="text-lg">{opTime.toFixed(1)}s</div>
         </div>
       </div>

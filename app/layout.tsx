@@ -16,7 +16,7 @@ export default function RootLayout({
     <html lang="de">
       <body className="min-h-screen bg-white">
         <PlayerProvider>
-          <main className="max-w-md mx-auto px-4 py-8">{children}</main>
+          <main className="max-w-xl mx-auto px-4 py-8">{children}</main>
         </PlayerProvider>
       </body>
     </html>
