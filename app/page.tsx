@@ -100,7 +100,7 @@ export default function Home() {
               onClick={() => setShowNewName(true)}
               className="w-full py-4 text-2xl font-bold bg-white text-sky-500 border-2 border-sky-300 rounded-xl active:bg-sky-50"
             >
-              Neuer Name…
+              Neuer Rechenheld…
             </button>
           </div>
         )}
