@@ -198,25 +198,29 @@ export default function DuellPage() {
                   <div>
                     <span className="text-lg">
                       {isChallenger ? "Du" : b.challenger.name} gegen{" "}
-                      {isChallenger ? otherName : "Du"} — bis {b.number_range}
+                      {isChallenger ? otherName : "Dich"} — {b.op_mode === "plus" ? "Nur +" : "+ und −"}, bis {b.number_range}
                     </span>
-                    <span className="text-sm text-gray-400 ml-2">
+                    <div className="text-sm text-gray-400">
                       {new Date(b.created_at).toLocaleDateString("de-DE", { weekday: "long", day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Berlin" })}
-                    </span>
+                    </div>
                   </div>
                   <span
                     className={`text-sm font-bold px-2 py-1 rounded ${
                       b.status === "pending"
                         ? "bg-yellow-200"
                         : b.status === "accepted"
-                          ? "bg-blue-200"
+                          ? isChallenger
+                            ? "bg-blue-200"
+                            : "bg-orange-200"
                           : "bg-green-200"
                     }`}
                   >
                     {b.status === "pending"
                       ? "Offen"
                       : b.status === "accepted"
-                        ? "Läuft"
+                        ? isChallenger
+                          ? `Warte auf ${otherName}`
+                          : "Du bist dran!"
                         : "Fertig"}
                   </span>
                 </div>
