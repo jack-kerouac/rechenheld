@@ -263,37 +263,70 @@ export default function BattlePage() {
     (myCorrect === opCorrect && myTime < opTime);
   const tie = myCorrect === opCorrect && myTime === opTime;
 
+  const opLabel = opponentName ?? "Gegner";
+  const timeDiff = myTime - opTime;
+
   return (
     <div className="flex flex-col items-center gap-6 pt-8">
       <h1 className="text-4xl font-bold">
         {tie ? "Unentschieden!" : iWon ? "Du hast gewonnen! 🏆" : "Knapp verloren!"}
       </h1>
 
-      <div className="w-full grid grid-cols-2 gap-4 text-center">
-        <div className="p-4 bg-blue-100 rounded-xl">
-          <div className="font-bold text-lg">Du</div>
-          <div className="text-2xl font-bold">{myCorrect} von 10 richtig</div>
-          <div className="text-lg">{myTime.toFixed(1)}s</div>
-        </div>
-        <div className="p-4 bg-amber-100 rounded-xl">
-          <div className="font-bold text-lg">Gegner</div>
-          <div className="text-2xl font-bold">{opCorrect} von 10 richtig</div>
-          <div className="text-lg">{opTime.toFixed(1)}s</div>
-        </div>
-      </div>
+      <table className="w-full text-center border-collapse rounded-xl overflow-hidden">
+        <thead>
+          <tr className="bg-purple-600 text-white">
+            <th className="py-2.5 text-left pl-3">Aufgabe</th>
+            <th className="py-2.5">Du</th>
+            <th className="py-2.5">{opLabel}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {myCalcs?.map((c, i) => {
+            const myOk = c.playerAnswer === c.answer;
+            const opOk = opCalcs?.[i]?.playerAnswer === opCalcs?.[i]?.answer;
+            return (
+              <tr key={i} className={i % 2 === 0 ? "bg-purple-50" : "bg-white"}>
+                <td className="py-2 text-left pl-3 font-mono text-lg">
+                  {c.a} {c.op} {c.b} = {c.answer}
+                </td>
+                <td className={`py-2 text-xl font-bold ${myOk ? "text-green-600" : "text-red-500"}`}>{myOk ? "✓" : "✗"}</td>
+                <td className={`py-2 text-xl font-bold ${opOk ? "text-green-600" : "text-red-500"}`}>{opOk ? "✓" : "✗"}</td>
+              </tr>
+            );
+          })}
+          <tr className="bg-gray-100 font-bold border-t-2 border-gray-300">
+            <td className="py-2.5 text-left pl-3">Zeit</td>
+            <td className="py-2.5">{myTime.toFixed(1)}s</td>
+            <td className="py-2.5">{opTime.toFixed(1)}s</td>
+          </tr>
+          <tr className="bg-gray-100 font-bold">
+            <td className="py-2.5 text-left pl-3">Richtig</td>
+            <td className="py-2.5">{myCorrect}/10</td>
+            <td className="py-2.5">{opCorrect}/10</td>
+          </tr>
+        </tbody>
+      </table>
+
+      {timeDiff !== 0 && (
+        <p className="text-sm text-gray-500">
+          {timeDiff < 0
+            ? `Du warst ${Math.abs(timeDiff).toFixed(1)}s schneller`
+            : `${opLabel} war ${timeDiff.toFixed(1)}s schneller`}
+        </p>
+      )}
 
       <div className="flex gap-4 mt-4">
         <Link
           href="/duell"
           className="px-6 py-3 bg-amber-500 text-white text-xl font-bold rounded-xl"
         >
-          Neues Duell
+          Alle Duelle
         </Link>
         <Link
           href="/"
           className="px-6 py-3 bg-sky-500 text-white text-xl font-bold rounded-xl"
         >
-          Start
+          Startseite
         </Link>
       </div>
     </div>
