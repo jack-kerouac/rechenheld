@@ -60,31 +60,32 @@ export function CalculationCard({
         </span>
       </div>
 
-      <div className="grid grid-cols-3 gap-3 w-full max-w-xs mt-4">
+      <div className="grid grid-cols-3 gap-3 w-[320px] mt-4" style={{ touchAction: "manipulation" }}>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
           <button
             key={n}
             onClick={() => handleKey(String(n))}
-            className="h-16 text-3xl font-bold rounded-xl bg-gray-100 active:bg-gray-300 transition-colors"
+            className="h-[84px] text-4xl font-bold rounded-xl bg-gray-100 active:bg-gray-300 transition-colors"
           >
             {n}
           </button>
         ))}
         <button
           onClick={() => handleKey("backspace")}
-          className="h-16 text-2xl font-bold rounded-xl bg-red-100 active:bg-red-300 transition-colors"
+          className="h-[84px] text-3xl font-bold rounded-xl bg-red-100 active:bg-red-300 transition-colors"
         >
           ←
         </button>
         <button
           onClick={() => handleKey("0")}
-          className="h-16 text-3xl font-bold rounded-xl bg-gray-100 active:bg-gray-300 transition-colors"
+          className="h-[84px] text-4xl font-bold rounded-xl bg-gray-100 active:bg-gray-300 transition-colors"
         >
           0
         </button>
+        <div />
         <button
           onClick={() => handleKey("ok")}
-          className="h-16 text-2xl font-bold rounded-xl bg-green-200 active:bg-green-400 transition-colors"
+          className="col-span-3 h-[84px] text-3xl font-bold rounded-xl bg-green-200 active:bg-green-400 transition-colors"
         >
           OK
         </button>
