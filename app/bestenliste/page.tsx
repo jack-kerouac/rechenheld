@@ -25,12 +25,18 @@ function formatInterval(interval: string): string {
 }
 
 function formatDate(dateStr: string): string {
-  return new Date(dateStr + "T00:00:00").toLocaleDateString("de-DE", {
+  const d = new Date(dateStr);
+  const date = d.toLocaleDateString("de-DE", {
     weekday: "long",
     day: "numeric",
     month: "long",
     year: "numeric",
   });
+  const time = d.toLocaleTimeString("de-DE", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  return `${date}, ${time} Uhr`;
 }
 
 function BestenlisteContent() {

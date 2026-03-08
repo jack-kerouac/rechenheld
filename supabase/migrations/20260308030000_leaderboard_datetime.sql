@@ -1,4 +1,4 @@
--- Recreate leaderboard view to include the date of the best round
+-- Change best_date from date to full timestamp so the leaderboard can show time of day
 drop view leaderboard;
 
 create view leaderboard as
