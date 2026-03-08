@@ -24,7 +24,7 @@ export function ResultScreen({
     (c) => c.playerAnswer === c.answer
   ).length;
   const total = calculations.length;
-  const seconds = (elapsedMs / 1000).toFixed(1);
+  const seconds = (elapsedMs / 1000).toFixed(1).replace(".", ",");
   const perfect = correct === total;
 
   return (

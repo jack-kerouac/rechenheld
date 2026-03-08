@@ -220,7 +220,7 @@ export default function BattlePage() {
           (new Date(myRound.finished_at!).getTime() -
             new Date(myRound.started_at).getTime()) /
           1000
-        ).toFixed(1)
+        ).toFixed(1).replace(".", ",")
       : "0";
 
     return (
@@ -296,8 +296,8 @@ export default function BattlePage() {
           })}
           <tr className="bg-gray-100 font-bold border-t-2 border-gray-300">
             <td className="py-2.5 text-left pl-3">Zeit</td>
-            <td className="py-2.5">{myTime.toFixed(1)}s</td>
-            <td className="py-2.5">{opTime.toFixed(1)}s</td>
+            <td className="py-2.5">{myTime.toFixed(1).replace(".", ",")}s</td>
+            <td className="py-2.5">{opTime.toFixed(1).replace(".", ",")}s</td>
           </tr>
           <tr className="bg-gray-100 font-bold">
             <td className="py-2.5 text-left pl-3">Richtig</td>
@@ -310,8 +310,8 @@ export default function BattlePage() {
       {timeDiff !== 0 && (
         <p className="text-sm text-gray-500">
           {timeDiff < 0
-            ? `Du warst ${Math.abs(timeDiff).toFixed(1)}s schneller`
-            : `${opLabel} war ${timeDiff.toFixed(1)}s schneller`}
+            ? `Du warst ${Math.abs(timeDiff).toFixed(1).replace(".", ",")}s schneller`
+            : `${opLabel} war ${timeDiff.toFixed(1).replace(".", ",")}s schneller`}
         </p>
       )}
 
