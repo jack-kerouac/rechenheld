@@ -65,7 +65,7 @@ export function CalculationCard({
       </div>
 
       <div
-        className={`grid w-full mt-2 px-4 ${
+        className={`grid w-full max-w-sm mt-2 px-4 ${
           numberRange <= 10
             ? "grid-cols-3 gap-2 text-4xl"
             : numberRange <= 20
@@ -78,7 +78,7 @@ export function CalculationCard({
           <button
             key={n}
             onClick={() => handleAnswer(n)}
-            className="aspect-square font-bold rounded-xl bg-sky-100 active:bg-sky-300 transition-colors"
+            className="py-3 font-bold rounded-xl bg-sky-100 active:bg-sky-300 transition-colors"
           >
             {n}
           </button>
@@ -87,7 +87,7 @@ export function CalculationCard({
           <button
             onClick={onBack ?? undefined}
             disabled={!onBack}
-            className={`aspect-square font-bold rounded-xl text-2xl ${
+            className={`py-3 font-bold rounded-xl text-2xl ${
               onBack
                 ? "bg-amber-200 text-amber-600 active:bg-amber-300"
                 : "bg-gray-100 text-gray-300"
@@ -99,7 +99,7 @@ export function CalculationCard({
         {onCancel && (
           <button
             onClick={onCancel}
-            className="aspect-square font-bold rounded-xl bg-red-200 text-red-600 active:bg-red-300 text-2xl"
+            className="py-3 font-bold rounded-xl bg-red-200 text-red-600 active:bg-red-300 text-2xl"
           >
             ✕
           </button>
