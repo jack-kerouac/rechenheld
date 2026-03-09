@@ -7,11 +7,13 @@ export function CalculationCard({
   calculation,
   numberRange,
   onAnswer,
+  onBack,
   onCancel,
 }: {
   calculation: Calculation;
   numberRange: number;
   onAnswer: (answer: number) => void;
+  onBack?: (() => void) | null;
   onCancel?: () => void;
 }) {
   const answers = Array.from({ length: numberRange + 1 }, (_, i) => i);
@@ -81,10 +83,23 @@ export function CalculationCard({
             {n}
           </button>
         ))}
+        {onBack !== undefined && (
+          <button
+            onClick={onBack ?? undefined}
+            disabled={!onBack}
+            className={`aspect-square font-bold rounded-xl text-2xl ${
+              onBack
+                ? "bg-amber-200 text-amber-600 active:bg-amber-300"
+                : "bg-gray-100 text-gray-300"
+            }`}
+          >
+            ←
+          </button>
+        )}
         {onCancel && (
           <button
             onClick={onCancel}
-            className="aspect-square font-bold rounded-xl bg-amber-200 text-amber-600 active:bg-amber-300 text-2xl"
+            className="aspect-square font-bold rounded-xl bg-red-200 text-red-600 active:bg-red-300 text-2xl"
           >
             ✕
           </button>

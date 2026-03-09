@@ -148,6 +148,7 @@ export default function UebenPage() {
         calculation={calculations[currentIndex]}
         numberRange={numberRange}
         onAnswer={handleAnswer}
+        onBack={currentIndex > 0 ? () => setCurrentIndex(currentIndex - 1) : null}
         onCancel={() => setPhase("setup")}
       />
     </div>
