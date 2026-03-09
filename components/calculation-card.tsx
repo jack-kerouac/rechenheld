@@ -5,16 +5,14 @@ import { Calculation } from "@/lib/types";
 
 export function CalculationCard({
   calculation,
-  index,
-  total,
   numberRange,
   onAnswer,
+  onCancel,
 }: {
   calculation: Calculation;
-  index: number;
-  total: number;
   numberRange: number;
   onAnswer: (answer: number) => void;
+  onCancel?: () => void;
 }) {
   const answers = Array.from({ length: numberRange + 1 }, (_, i) => i);
 
@@ -59,28 +57,38 @@ export function CalculationCard({
   }, [handleAnswer, numberRange]);
 
   return (
-    <div className="flex flex-col items-center gap-4">
-      <div className="text-lg text-gray-500">
-        Aufgabe {index + 1} von {total}
-      </div>
-
+    <div className="flex flex-col items-center gap-4 w-full">
       <div className="text-5xl font-bold bg-amber-50 px-8 py-4 rounded-2xl">
         {calculation.a} {calculation.op} {calculation.b} = <span className="text-amber-500">?</span>
       </div>
 
       <div
-        className="flex flex-wrap justify-center gap-2 w-full mt-2 px-2"
+        className={`grid w-full mt-2 px-4 ${
+          numberRange <= 10
+            ? "grid-cols-3 gap-2 text-4xl"
+            : numberRange <= 20
+              ? "grid-cols-4 gap-2 text-3xl"
+              : "grid-cols-5 gap-2 text-2xl"
+        }`}
         style={{ touchAction: "none" }}
       >
         {answers.map((n) => (
           <button
             key={n}
             onClick={() => handleAnswer(n)}
-            className="w-[80px] h-[80px] text-3xl font-bold rounded-xl bg-sky-100 active:bg-sky-300 transition-colors"
+            className="aspect-square font-bold rounded-xl bg-sky-100 active:bg-sky-300 transition-colors"
           >
             {n}
           </button>
         ))}
+        {onCancel && (
+          <button
+            onClick={onCancel}
+            className="aspect-square font-bold rounded-xl bg-amber-200 text-amber-600 active:bg-amber-300 text-2xl"
+          >
+            ✕
+          </button>
+        )}
       </div>
     </div>
   );

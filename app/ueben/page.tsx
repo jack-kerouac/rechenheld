@@ -138,22 +138,18 @@ export default function UebenPage() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-6 pt-4">
-      <Timer running={phase === "solving"} />
+    <div className="flex flex-col items-center gap-4 pt-4">
+      <div className="flex w-full items-center justify-between px-2">
+        <span className="text-lg text-gray-500">Aufgabe {currentIndex + 1} von {COUNT}</span>
+        <Timer running={phase === "solving"} />
+      </div>
       <CalculationCard
         key={currentIndex}
         calculation={calculations[currentIndex]}
-        index={currentIndex}
-        total={COUNT}
         numberRange={numberRange}
         onAnswer={handleAnswer}
+        onCancel={() => setPhase("setup")}
       />
-      <button
-        onClick={() => setPhase("setup")}
-        className="px-6 py-3 text-xl font-bold bg-gray-200 text-gray-500 rounded-xl active:bg-gray-300"
-      >
-        Abbrechen
-      </button>
     </div>
   );
 }

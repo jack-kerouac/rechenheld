@@ -192,13 +192,14 @@ export default function BattlePage() {
 
   if (phase === "solving") {
     return (
-      <div className="flex flex-col items-center gap-6 pt-4">
-        <Timer running={true} onElapsed={handleElapsed} />
+      <div className="flex flex-col items-center gap-4 pt-4">
+        <div className="flex w-full items-center justify-between px-2">
+          <span className="text-lg text-gray-500">Aufgabe {currentIndex + 1} von {calculations.length}</span>
+          <Timer running={true} onElapsed={handleElapsed} />
+        </div>
         <CalculationCard
           key={currentIndex}
           calculation={calculations[currentIndex]}
-          index={currentIndex}
-          total={calculations.length}
           numberRange={battle!.number_range}
           onAnswer={handleAnswer}
         />
