@@ -199,6 +199,7 @@ export default function BattlePage() {
           calculation={calculations[currentIndex]}
           index={currentIndex}
           total={calculations.length}
+          numberRange={battle!.number_range}
           onAnswer={handleAnswer}
         />
       </div>

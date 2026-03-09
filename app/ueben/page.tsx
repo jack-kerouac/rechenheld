@@ -145,6 +145,7 @@ export default function UebenPage() {
         calculation={calculations[currentIndex]}
         index={currentIndex}
         total={COUNT}
+        numberRange={numberRange}
         onAnswer={handleAnswer}
       />
       <button
