@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Calculation } from "@/lib/types";
 
 export function CalculationCard({
@@ -17,12 +17,15 @@ export function CalculationCard({
   onCancel?: () => void;
 }) {
   const answers = Array.from({ length: numberRange + 1 }, (_, i) => i);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
 
   const handleAnswer = useCallback(
     (n: number) => {
-      onAnswer(n);
+      if (selectedAnswer !== null) return;
+      setSelectedAnswer(n);
+      setTimeout(() => onAnswer(n), 120);
     },
-    [onAnswer]
+    [onAnswer, selectedAnswer]
   );
 
   const keyBuffer = useRef("");
@@ -59,7 +62,7 @@ export function CalculationCard({
   }, [handleAnswer, numberRange]);
 
   return (
-    <div className="flex flex-col items-center gap-4 w-full">
+    <div className="flex flex-col items-center gap-4 w-full animate-fade-in">
       <div className="text-5xl font-bold bg-amber-50 px-8 py-4 rounded-2xl">
         {calculation.a} {calculation.op} {calculation.b} = <span className="text-amber-500">?</span>
       </div>
@@ -78,7 +81,11 @@ export function CalculationCard({
           <button
             key={n}
             onClick={() => handleAnswer(n)}
-            className="py-3 font-bold rounded-xl bg-sky-100 active:bg-sky-300 transition-colors"
+            className={`py-3 font-bold rounded-xl transition-colors ${
+              selectedAnswer === n
+                ? "bg-sky-400 text-white"
+                : "bg-sky-100 active:bg-sky-300"
+            }`}
           >
             {n}
           </button>
