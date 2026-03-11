@@ -12,19 +12,28 @@ const OP_MODES: { value: OpMode; label: string }[] = [
   { value: "plus-minus", label: "+ und −" },
 ];
 
-function formatInterval(interval: string): string {
+function formatInterval(interval: string): { short: string; long: string } {
   // PostgreSQL interval like "00:00:12.345" → "12,3 Sekunden"
   const match = interval.match(/(\d+):(\d+):(\d+)\.?(\d*)/);
-  if (!match) return interval;
+  if (!match) return { short: interval, long: interval };
   const hours = parseInt(match[1]);
   const minutes = parseInt(match[2]);
   const seconds = parseInt(match[3]);
   const frac = match[4] ? match[4].slice(0, 1) : "0";
   const totalSeconds = hours * 3600 + minutes * 60 + seconds;
-  return `${totalSeconds},${frac} Sekunden`;
+  return { short: `${totalSeconds},${frac} s`, long: `${totalSeconds},${frac} Sekunden` };
 }
 
-function formatDate(dateStr: string): string {
+function formatDateShort(dateStr: string): string {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString("de-DE", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+}
+
+function formatDateLong(dateStr: string): string {
   const d = new Date(dateStr);
   const date = d.toLocaleDateString("de-DE", {
     weekday: "long",
@@ -123,7 +132,7 @@ function BestenlisteContent() {
           {entries.map((entry, i) => (
             <div
               key={entry.player_id}
-              className={`flex items-center justify-between px-4 py-3 rounded-xl text-xl ${
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl text-xl ${
                 i === 0
                   ? "bg-yellow-200"
                   : i === 1
@@ -133,15 +142,17 @@ function BestenlisteContent() {
                       : "bg-white"
               }`}
             >
-              <span className="font-bold w-8">{i + 1}.</span>
-              <span className="flex-1">
+              <span className="font-bold w-8 shrink-0">{i + 1}.</span>
+              <span className="flex-1 min-w-0 truncate">
                 {entry.name}
               </span>
-              <span className="text-sm text-gray-500 mr-3">
-                {formatDate(entry.best_date)}
+              <span className="text-sm text-gray-500 shrink-0 whitespace-nowrap">
+                <span className="sm:hidden">{formatDateShort(entry.best_date)}</span>
+                <span className="hidden sm:inline">{formatDateLong(entry.best_date)}</span>
               </span>
-              <span className="font-mono font-bold">
-                {formatInterval(entry.best_time)}
+              <span className="font-mono font-bold shrink-0 whitespace-nowrap">
+                <span className="sm:hidden">{formatInterval(entry.best_time).short}</span>
+                <span className="hidden sm:inline">{formatInterval(entry.best_time).long}</span>
               </span>
             </div>
           ))}
