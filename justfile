@@ -1,6 +1,11 @@
-# Run the app locally
-dev:
-    npm run dev
+# Start local Supabase (Docker) and the Next.js dev server
+start:
+    supabase start
+    npm run dev -- --port 3001
+
+# Stop local Supabase containers
+stop:
+    supabase stop
 
 # Deploy Supabase migrations
 deploy-db:
