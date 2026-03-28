@@ -168,9 +168,10 @@ export default function Home() {
       <div className="w-full space-y-4 mt-4">
         <Link
           href="/ueben"
-          className="block w-full py-5 text-2xl font-bold text-center bg-sky-400 text-white rounded-xl active:bg-sky-500"
+          className="block w-full py-4 text-center bg-sky-400 text-white rounded-xl active:bg-sky-500"
         >
-          ✏️ Üben
+          <div className="text-2xl font-bold">✏️ Üben</div>
+          <div className="text-sm font-normal opacity-90">10/10 richtig? → Bestenliste! 🏆</div>
         </Link>
         <Link
           href="/duell"
