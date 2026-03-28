@@ -1,4 +1,13 @@
-# Run the app locally
+# Start local Supabase (Docker) and the Next.js dev server
+start:
+    supabase start
+    npm run dev
+
+# Stop local Supabase containers
+stop:
+    supabase stop
+
+# Run only the Next.js dev server (assumes supabase already running)
 dev:
     npm run dev
 
