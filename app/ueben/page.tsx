@@ -122,12 +122,15 @@ export default function UebenPage() {
           )}
 
           {opMode && numberRange > 0 && (
-            <button
-              onClick={startRound}
-              className="w-full py-4 text-xl font-bold bg-green-500 text-white rounded-xl active:bg-green-600"
-            >
-              ✏️ Los geht&apos;s!
-            </button>
+            <>
+              <p className="text-sm text-gray-500 text-center">💡 10 von 10 richtig? Deine Zeit kommt in die Bestenliste!</p>
+              <button
+                onClick={startRound}
+                className="w-full py-4 text-xl font-bold bg-green-500 text-white rounded-xl active:bg-green-600"
+              >
+                ✏️ Los geht&apos;s!
+              </button>
+            </>
           )}
         </div>
         <Link href="/" className="mt-4 px-6 py-3 text-xl font-bold bg-gray-200 text-gray-500 rounded-xl active:bg-gray-300">
