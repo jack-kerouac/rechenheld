@@ -205,7 +205,7 @@ const addGroups = [
   { id: 'plus1',    label: '+1',                     color: '#78909c', phase: 2 },
   { id: 'doubles',  label: 'Verdoppeln',             color: '#e53935', phase: 3 },
   { id: 'near-dbl', label: 'Fast-Verdoppeln (±1)',   color: '#fb8c00', phase: 4 },
-  { id: 'making10', label: 'Zehner knacken (=10)',   color: '#7cb342', phase: 5 },
+  { id: 'making10', label: 'Partnerzahlen',           color: '#7cb342', phase: 5 },
   { id: 'count23',  label: '+2 / +3 (Weiterzählen)', color: '#5c6bc0', phase: 6 },
   { id: 'bridge10', label: 'Über den Zehner (>10)',  color: '#8e24aa', phase: 7 },
   { id: 'teen01',   label: '+0 / +1 (im Zehner)',   color: '#b0bec5', phase: 8 },
@@ -223,10 +223,10 @@ function classifyAdd(a, b) {
   }
   // Both operands ≤ 10
   if (lo === 0)              return 'identity';
+  if (a + b === 10)          return 'making10';
   if (lo === 1)              return 'plus1';
   if (a === b)               return 'doubles';
   if (Math.abs(a - b) === 1) return 'near-dbl';
-  if (a + b === 10)          return 'making10';
   if (lo <= 3)               return 'count23';
   return 'bridge10';
 }
@@ -363,15 +363,15 @@ function classifySub(a, b) {
       <tr class="examples-row"><td colspan="5"><span>3+0</span><span>0+5</span><span>4+1</span><span>1+7</span><span>2+3</span><span>3+2</span><span>5+2</span><span>3+4</span><span>2+7</span><span>1+9</span></td></tr>
       <tr><td>2</td><td>Verdoppeln</td><td>10</td><td>Verdoppeln</td><td>+2/+3, +1</td></tr>
       <tr class="examples-row"><td colspan="5"><span>1+1</span><span>2+2</span><span>3+3</span><span>4+4</span><span>5+5</span><span>4+2</span><span>3+2</span><span>5+3</span><span>6+1</span><span>4+3</span></td></tr>
-      <tr><td>3</td><td>Fast-Doppeln &amp; Zehner</td><td>10</td><td>Fast-Verdoppeln, Zehner knacken</td><td>Verdoppeln, +2/+3</td></tr>
+      <tr><td>3</td><td>Fast-Doppeln &amp; Zehner</td><td>10</td><td>Fast-Verdoppeln, Partnerzahlen</td><td>Verdoppeln, +2/+3</td></tr>
       <tr class="examples-row"><td colspan="5"><span>1+2</span><span>2+3</span><span>3+4</span><span>4+5</span><span>1+9</span><span>2+8</span><span>3+7</span><span>4+6</span><span>2+2</span><span>3+2</span></td></tr>
-      <tr><td>4</td><td>Über den Zehner</td><td>20</td><td>Über den Zehner</td><td>Zehner knacken, Verdoppeln</td></tr>
+      <tr><td>4</td><td>Über den Zehner</td><td>20</td><td>Über den Zehner</td><td>Partnerzahlen, Verdoppeln</td></tr>
       <tr class="examples-row"><td colspan="5"><span>5+6</span><span>4+8</span><span>6+7</span><span>5+7</span><span>7+8</span><span>6+8</span><span>4+9</span><span>8+9</span><span>7+9</span><span>5+9</span></td></tr>
-      <tr><td>5</td><td>Minus-Einstieg</td><td>10</td><td>−0, n−n=0, −1, Halbieren, Fast-Halbieren</td><td>Über den Zehner, Zehner knacken</td></tr>
+      <tr><td>5</td><td>Minus-Einstieg</td><td>10</td><td>−0, n−n=0, −1, Halbieren, Fast-Halbieren</td><td>Über den Zehner, Partnerzahlen</td></tr>
       <tr class="examples-row"><td colspan="5"><span>7−0</span><span>8−1</span><span>4−4</span><span>3−3</span><span>6−3</span><span>8−4</span><span>10−5</span><span>5−2</span><span>7−4</span><span>9−5</span></td></tr>
       <tr><td>6</td><td>Minus bis 10</td><td>10</td><td>Vom Zehner, −2/−3, Minus bis 10</td><td>Halbieren, Fast-Halbieren</td></tr>
       <tr class="examples-row"><td colspan="5"><span>10−4</span><span>10−7</span><span>10−2</span><span>9−2</span><span>8−3</span><span>7−3</span><span>9−6</span><span>8−5</span><span>7−5</span><span>9−7</span></td></tr>
-      <tr><td>7</td><td>Im Zehner (+)</td><td>20</td><td>+0/+1 (Zehner), Im Zehner addieren</td><td>Über den Zehner, Zehner knacken</td></tr>
+      <tr><td>7</td><td>Im Zehner (+)</td><td>20</td><td>+0/+1 (Zehner), Im Zehner addieren</td><td>Über den Zehner, Partnerzahlen</td></tr>
       <tr class="examples-row"><td colspan="5"><span>11+0</span><span>0+13</span><span>14+1</span><span>1+15</span><span>11+3</span><span>12+4</span><span>13+3</span><span>14+2</span><span>11+5</span><span>12+5</span></td></tr>
       <tr><td>8</td><td>Zwanzig knacken</td><td>20</td><td>Zwanzig knacken</td><td>Im Zehner addieren, Über den Zehner</td></tr>
       <tr class="examples-row"><td colspan="5"><span>11+9</span><span>12+8</span><span>13+7</span><span>14+6</span><span>15+5</span><span>9+11</span><span>8+12</span><span>7+13</span><span>6+14</span><span>16+4</span></td></tr>
