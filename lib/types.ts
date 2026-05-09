@@ -51,3 +51,10 @@ export type LeaderboardEntry = {
   best_time: string;
   best_date: string;
 };
+
+export type PracticeLeaderboardEntry = {
+  player_id: string;
+  name: string;
+  stufe: Stufe;
+  rounds_count: number;
+};

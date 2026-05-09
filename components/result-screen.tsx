@@ -86,10 +86,10 @@ export function ResultScreen({
             Nochmal!
           </Link>
           <Link
-            href={stufe ? `/bestenliste?stufe=${stufe}` : "/bestenliste"}
+            href={stufe ? `/schnellste?stufe=${stufe}` : "/schnellste"}
             className="px-6 py-3 bg-yellow-400 text-xl font-bold rounded-xl"
           >
-            Bestenliste
+            Schnellste Helden
           </Link>
         </div>
       )}

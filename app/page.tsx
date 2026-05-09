@@ -171,7 +171,7 @@ export default function Home() {
           className="block w-full py-4 text-center bg-sky-400 text-white rounded-xl active:bg-sky-500"
         >
           <div className="text-2xl font-bold">✏️ Üben</div>
-          <div className="text-sm font-normal opacity-90">10/10 richtig? → Bestenliste! 🏆</div>
+          <div className="text-sm font-normal opacity-90">10/10 richtig? → Schnellste Helden! 🏆</div>
         </Link>
         <Link
           href="/duell"
@@ -184,12 +184,20 @@ export default function Home() {
             </span>
           )}
         </Link>
-        <Link
-          href="/bestenliste?stufe=1"
-          className="block w-full py-5 text-2xl font-bold text-center bg-amber-400 rounded-xl active:bg-amber-500"
-        >
-          🏆 Bestenliste
-        </Link>
+        <div className="flex gap-3 w-full">
+          <Link
+            href="/schnellste?stufe=1"
+            className="flex-1 py-5 text-xl font-bold text-center bg-amber-400 rounded-xl active:bg-amber-500"
+          >
+            🏆 Schnellste<br />Helden
+          </Link>
+          <Link
+            href="/fleissigste?stufe=1"
+            className="flex-1 py-5 text-xl font-bold text-center bg-amber-400 rounded-xl active:bg-amber-500"
+          >
+            ⭐ Fleißigste<br />Helden
+          </Link>
+        </div>
       </div>
 
       <button
