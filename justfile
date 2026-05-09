@@ -1,11 +1,14 @@
-# Start local Supabase (Docker) and the Next.js dev server
-start:
+# Start local Supabase (Docker)
+start-db:
     supabase start
-    npm run dev
 
 # Stop local Supabase containers
-stop:
+stop-db:
     supabase stop
+
+# Start the Next.js dev server
+start:
+    npm run dev
 
 # Deploy Supabase migrations
 deploy-db:
