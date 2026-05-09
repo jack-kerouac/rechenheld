@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Levels &amp; Strategiegruppen – Rechenheld</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f5f5f5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    color: #333;
+  }
+  h1, h2, h3 { width: 100%; max-width: 900px; }
+  h1 { margin-bottom: 1.5rem; font-size: 1.75rem; }
+  h2 { margin: 2.5rem 0 0.3rem; font-size: 1.5rem; }
+  h3 { margin: 2rem 0 1rem; font-size: 1.1rem; color: #555; }
+
+  .grid-wrapper {
+    display: flex;
+    align-items: flex-end;
+    gap: 0;
+  }
+  .y-label {
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-align: center;
+    padding-right: 0.6rem;
+  }
+  .x-label {
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-align: center;
+    margin-top: 0.5rem;
+  }
+
+  /* --- Addition grid (21×21) --- */
+  .grid-add {
+    display: grid;
+    grid-template-columns: repeat(22, 1fr);
+    grid-template-rows: repeat(22, 1fr);
+    gap: 1px;
+  }
+
+  /* --- Subtraction grid (21×21) --- */
+  .grid-sub {
+    display: grid;
+    grid-template-columns: repeat(22, 1fr);
+    grid-template-rows: repeat(22, 1fr);
+    gap: 1px;
+  }
+
+  .cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    border-radius: 3px;
+    color: #fff;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.25);
+  }
+  .grid-add .cell {
+    width: 32px;
+    height: 32px;
+    font-size: 0.55rem;
+  }
+  .grid-sub .cell {
+    width: 32px;
+    height: 32px;
+    font-size: 0.55rem;
+  }
+  .cell.header {
+    background: none;
+    color: #555;
+    font-weight: 700;
+    text-shadow: none;
+  }
+  .grid-add .cell.header { font-size: 0.7rem; }
+  .grid-sub .cell.header { font-size: 0.7rem; }
+  .cell.corner { background: none; }
+  .cell.empty  { background: none; }
+
+  /* Addition strategy group colors */
+  .g-identity  { background: #9e9e9e; }
+  .g-plus1     { background: #78909c; }
+  .g-doubles   { background: #e53935; }
+  .g-near-dbl  { background: #fb8c00; }
+  .g-making10  { background: #7cb342; }
+  .g-count23   { background: #5c6bc0; }
+  .g-bridge10  { background: #8e24aa; }
+  .g-teen01    { background: #b0bec5; }
+  .g-teen-add  { background: #ec407a; }
+  .g-making20  { background: #00897b; }
+
+  /* Subtraction strategy group colors */
+  .g-sub0      { background: #9e9e9e; }
+  .g-sub-nn    { background: #607d8b; }
+  .g-sub1      { background: #78909c; }
+  .g-sub-half  { background: #e53935; }
+  .g-sub-nhalf { background: #fb8c00; }
+  .g-sub-from10{ background: #7cb342; }
+  .g-sub-count { background: #5c6bc0; }
+  .g-sub-in10  { background: #29b6f6; }
+  .g-sub-thru10{ background: #8e24aa; }
+  .g-sub-teen  { background: #ec407a; }
+
+  .legend-table {
+    margin-top: 1.5rem;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+  .legend-table th {
+    text-align: left;
+    padding: 0.4rem 0.8rem;
+    border-bottom: 2px solid #ccc;
+    color: #555;
+    font-weight: 600;
+  }
+  .legend-table td {
+    padding: 0.35rem 0.8rem;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  .legend-table tr:last-child td {
+    border-bottom: none;
+  }
+  .legend-table td:last-child {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .legend-swatch {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .subtitle {
+    width: 100%;
+    max-width: 900px;
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+  }
+
+  /* Level design section */
+  .level-section { max-width: 900px; width: 100%; margin-top: 3rem; }
+  .level-section h2 { margin-bottom: 0.5rem; }
+  .level-table { border-collapse: collapse; font-size: 0.85rem; width: 100%; margin-top: 1rem; }
+  .level-table th { text-align: left; padding: 0.5rem 0.6rem; border-bottom: 2px solid #ccc; color: #555; font-weight: 600; }
+  .level-table td { padding: 0.4rem 0.6rem; border-bottom: 1px solid #e0e0e0; }
+  .level-table tr:last-child td { border-bottom: none; }
+  .level-table td:nth-child(1), .level-table td:nth-child(3) { text-align: center; font-variant-numeric: tabular-nums; }
+  .param-table { border-collapse: collapse; font-size: 0.85rem; margin-top: 1rem; }
+  .param-table th { text-align: left; padding: 0.4rem 0.8rem; border-bottom: 2px solid #ccc; color: #555; }
+  .param-table td { padding: 0.35rem 0.8rem; border-bottom: 1px solid #e0e0e0; }
+  .param-note { color: #888; font-size: 0.85rem; margin-top: 0.8rem; line-height: 1.5; }
+  .examples-row td { padding: 0.2rem 0.6rem 0.5rem; background: #fafafa; border-bottom: 2px solid #e0e0e0; text-align: left; }
+  .examples-row span { font-family: monospace; font-size: 0.8rem; color: #aaa; margin-right: 0.5rem; display: inline-block; }
+</style>
+</head>
+<body>
+
+<h1>Levels &amp; Strategiegruppen – Rechenheld</h1>
+
+<!-- ============ ADDITION ============ -->
+<h2>Strategiegruppen – Addition 0 bis 20</h2>
+<p class="subtitle">Denk-Strategie, mit der das Kind die Aufgabe löst</p>
+
+<div class="grid-wrapper">
+  <div class="y-label">2. Summand</div>
+  <div>
+    <div class="grid-add" id="grid-add"></div>
+    <div class="x-label">1. Summand</div>
+  </div>
+</div>
+
+<table class="legend-table" id="legend-add"></table>
+
+<!-- ============ SUBTRACTION ============ -->
+<h2>Strategiegruppen – Subtraktion 0 bis 20</h2>
+<p class="subtitle">Jede Aufgabe a − b wird über „Denke Addition: b + ? = a" gelöst</p>
+
+<div class="grid-wrapper">
+  <div class="y-label">Subtrahend (b)</div>
+  <div>
+    <div class="grid-sub" id="grid-sub"></div>
+    <div class="x-label">Minuend (a)</div>
+  </div>
+</div>
+
+<table class="legend-table" id="legend-sub"></table>
+
+<script>
+// ===================== ADDITION =====================
+
+const addGroups = [
+  { id: 'identity', label: '+0 (Identität)',        color: '#9e9e9e', phase: 1 },
+  { id: 'plus1',    label: '+1',                     color: '#78909c', phase: 2 },
+  { id: 'doubles',  label: 'Verdoppeln',             color: '#e53935', phase: 3 },
+  { id: 'near-dbl', label: 'Fast-Verdoppeln (±1)',   color: '#fb8c00', phase: 4 },
+  { id: 'making10', label: 'Zehner knacken (=10)',   color: '#7cb342', phase: 5 },
+  { id: 'count23',  label: '+2 / +3 (Weiterzählen)', color: '#5c6bc0', phase: 6 },
+  { id: 'bridge10', label: 'Über den Zehner (>10)',  color: '#8e24aa', phase: 7 },
+  { id: 'teen01',   label: '+0 / +1 (im Zehner)',   color: '#b0bec5', phase: 8 },
+  { id: 'teen-add', label: 'Im Zehner addieren',    color: '#ec407a', phase: 9 },
+  { id: 'making20', label: 'Zwanzig knacken (=20)', color: '#00897b', phase: 10 },
+];
+
+function classifyAdd(a, b) {
+  const lo = Math.min(a, b), hi = Math.max(a, b);
+  // Extended range first: any operand > 10
+  if (hi > 10) {
+    if (lo <= 1)             return 'teen01';
+    if (a + b === 20)        return 'making20';
+    return 'teen-add';
+  }
+  // Both operands ≤ 10
+  if (lo === 0)              return 'identity';
+  if (lo === 1)              return 'plus1';
+  if (a === b)               return 'doubles';
+  if (Math.abs(a - b) === 1) return 'near-dbl';
+  if (a + b === 10)          return 'making10';
+  if (lo <= 3)               return 'count23';
+  return 'bridge10';
+}
+
+{
+  const el = document.getElementById('grid-add');
+  let html = '<div class="cell corner"></div>';
+  for (let a = 0; a <= 20; a++) html += `<div class="cell header">${a}</div>`;
+  for (let b = 20; b >= 0; b--) {
+    html += `<div class="cell header">${b}</div>`;
+    for (let a = 0; a <= 20; a++) {
+      if (a + b > 20) {
+        html += `<div class="cell empty"></div>`;
+      } else {
+        const g = classifyAdd(a, b);
+        html += `<div class="cell g-${g}" title="${a}+${b}=${a+b}">${a}+${b}</div>`;
+      }
+    }
+  }
+  el.innerHTML = html;
+}
+
+{
+  const el = document.getElementById('legend-add');
+  // Count calculations per group (only valid cells: a+b ≤ 20)
+  const counts = {};
+  for (const g of addGroups) counts[g.id] = 0;
+  for (let a = 0; a <= 20; a++)
+    for (let b = 0; b <= 20 - a; b++)
+      counts[classifyAdd(a, b)]++;
+  const total = Object.values(counts).reduce((s, n) => s + n, 0);
+
+  let html = '<thead><tr><th></th><th>Phase</th><th>Strategie</th><th>Anzahl</th></tr></thead><tbody>';
+  for (const g of addGroups) {
+    html += `<tr>
+      <td><span class="legend-swatch" style="background:${g.color}"></span></td>
+      <td>${g.phase}</td>
+      <td>${g.label}</td>
+      <td>${counts[g.id]}</td>
+    </tr>`;
+  }
+  html += `<tr style="font-weight:600;border-top:2px solid #ccc"><td></td><td></td><td>Gesamt</td><td>${total}</td></tr>`;
+  html += '</tbody>';
+  el.innerHTML = html;
+}
+
+// ===================== SUBTRACTION =====================
+
+const subGroups = [
+  { id: 'sub0',      label: '−0 (Identität)',               color: '#9e9e9e', phase: 1 },
+  { id: 'sub-nn',    label: 'n − n = 0',                    color: '#607d8b', phase: 1 },
+  { id: 'sub1',      label: '−1 (eins zurück)',             color: '#78909c', phase: 2 },
+  { id: 'sub-half',  label: 'Halbieren (aus Verdoppeln)',    color: '#e53935', phase: 3 },
+  { id: 'sub-nhalf', label: 'Fast-Halbieren (±1)',          color: '#fb8c00', phase: 4 },
+  { id: 'sub-from10',label: 'Vom Zehner (10 − x)',          color: '#7cb342', phase: 5 },
+  { id: 'sub-count', label: '−2 / −3 (Rückwärts zählen)',   color: '#5c6bc0', phase: 6 },
+  { id: 'sub-in10',  label: 'Minus bis 10 (Rest)',          color: '#29b6f6', phase: 7 },
+  { id: 'sub-teen',  label: 'Im Zehner bleiben (>10)',      color: '#ec407a', phase: 8 },
+  { id: 'sub-thru10',label: 'Über den Zehner zurück',       color: '#8e24aa', phase: 9 },
+];
+
+function classifySub(a, b) {
+  // a - b where b <= a, both 0..20
+  const c = a - b; // result
+  if (b === 0)                         return 'sub0';       // n − 0 = n
+  if (a === b)                         return 'sub-nn';     // n − n = 0
+  if (b === 1)                         return 'sub1';       // n − 1
+  if (c === b)                         return 'sub-half';   // halving: a = 2b
+  if (Math.abs(c - b) === 1)           return 'sub-nhalf';  // near-halving: result ≈ subtrahend
+  if (a === 10)                        return 'sub-from10'; // 10 − x
+  if (b <= 3)                          return 'sub-count';  // count back 2 or 3
+  if (a <= 10)                         return 'sub-in10';   // within 10, other
+  if (c < 10 && a > 10)               return 'sub-thru10'; // crosses the ten boundary
+  return 'sub-teen';                                        // stays above 10
+}
+
+{
+  const el = document.getElementById('grid-sub');
+  let html = '<div class="cell corner"></div>';
+  // Header row: minuend a = 0..20
+  for (let a = 0; a <= 20; a++) html += `<div class="cell header">${a}</div>`;
+  // Rows: subtrahend b from 20 down to 0
+  for (let b = 20; b >= 0; b--) {
+    html += `<div class="cell header">${b}</div>`;
+    for (let a = 0; a <= 20; a++) {
+      if (b > a) {
+        // Invalid: b > a → empty cell
+        html += `<div class="cell empty"></div>`;
+      } else {
+        const g = classifySub(a, b);
+        const c = a - b;
+        html += `<div class="cell g-${g}" title="${a}−${b}=${c}">${a}−${b}</div>`;
+      }
+    }
+  }
+  el.innerHTML = html;
+}
+
+{
+  const el = document.getElementById('legend-sub');
+  const counts = {};
+  for (const g of subGroups) counts[g.id] = 0;
+  for (let a = 0; a <= 20; a++)
+    for (let b = 0; b <= a; b++)
+      counts[classifySub(a, b)]++;
+  const total = Object.values(counts).reduce((s, n) => s + n, 0);
+
+  let html = '<thead><tr><th></th><th>Phase</th><th>Strategie</th><th>Anzahl</th></tr></thead><tbody>';
+  for (const g of subGroups) {
+    html += `<tr>
+      <td><span class="legend-swatch" style="background:${g.color}"></span></td>
+      <td>${g.phase}</td>
+      <td>${g.label}</td>
+      <td>${counts[g.id]}</td>
+    </tr>`;
+  }
+  html += `<tr style="font-weight:600;border-top:2px solid #ccc"><td></td><td></td><td>Gesamt</td><td>${total}</td></tr>`;
+  html += '</tbody>';
+  el.innerHTML = html;
+}
+</script>
+
+<!-- ============ LEVEL DESIGN ============ -->
+<div class="level-section">
+  <h2>Level-Design</h2>
+  <p class="subtitle">10 Levels, aufsteigend nach Schwierigkeit. Jedes Level zieht Aufgaben aus zwei Töpfen: Fokus (70%), Wiederholung (30%).</p>
+
+  <table class="level-table">
+    <thead>
+      <tr><th>Lvl</th><th>Name</th><th>0–?</th><th>Fokus (70%)</th><th>Wiederholung (30%)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>+0 bis +3</td><td>10</td><td>+0 (Identität), +1, +2/+3</td><td>—</td></tr>
+      <tr class="examples-row"><td colspan="5"><span>3+0</span><span>0+5</span><span>4+1</span><span>1+7</span><span>2+3</span><span>3+2</span><span>5+2</span><span>3+4</span><span>2+7</span><span>1+9</span></td></tr>
+      <tr><td>2</td><td>Verdoppeln</td><td>10</td><td>Verdoppeln</td><td>+2/+3, +1</td></tr>
+      <tr class="examples-row"><td colspan="5"><span>1+1</span><span>2+2</span><span>3+3</span><span>4+4</span><span>5+5</span><span>4+2</span><span>3+2</span><span>5+3</span><span>6+1</span><span>4+3</span></td></tr>
+      <tr><td>3</td><td>Fast-Doppeln &amp; Zehner</td><td>10</td><td>Fast-Verdoppeln, Zehner knacken</td><td>Verdoppeln, +2/+3</td></tr>
+      <tr class="examples-row"><td colspan="5"><span>1+2</span><span>2+3</span><span>3+4</span><span>4+5</span><span>1+9</span><span>2+8</span><span>3+7</span><span>4+6</span><span>2+2</span><span>3+2</span></td></tr>
+      <tr><td>4</td><td>Über den Zehner</td><td>20</td><td>Über den Zehner</td><td>Zehner knacken, Verdoppeln</td></tr>
+      <tr class="examples-row"><td colspan="5"><span>5+6</span><span>4+8</span><span>6+7</span><span>5+7</span><span>7+8</span><span>6+8</span><span>4+9</span><span>8+9</span><span>7+9</span><span>5+9</span></td></tr>
+      <tr><td>5</td><td>Minus-Einstieg</td><td>10</td><td>−0, n−n=0, −1, Halbieren, Fast-Halbieren</td><td>Über den Zehner, Zehner knacken</td></tr>
+      <tr class="examples-row"><td colspan="5"><span>7−0</span><span>8−1</span><span>4−4</span><span>3−3</span><span>6−3</span><span>8−4</span><span>10−5</span><span>5−2</span><span>7−4</span><span>9−5</span></td></tr>
+      <tr><td>6</td><td>Minus bis 10</td><td>10</td><td>Vom Zehner, −2/−3, Minus bis 10</td><td>Halbieren, Fast-Halbieren</td></tr>
+      <tr class="examples-row"><td colspan="5"><span>10−4</span><span>10−7</span><span>10−2</span><span>9−2</span><span>8−3</span><span>7−3</span><span>9−6</span><span>8−5</span><span>7−5</span><span>9−7</span></td></tr>
+      <tr><td>7</td><td>Im Zehner (+)</td><td>20</td><td>+0/+1 (Zehner), Im Zehner addieren</td><td>Über den Zehner, Zehner knacken</td></tr>
+      <tr class="examples-row"><td colspan="5"><span>11+0</span><span>0+13</span><span>14+1</span><span>1+15</span><span>11+3</span><span>12+4</span><span>13+3</span><span>14+2</span><span>11+5</span><span>12+5</span></td></tr>
+      <tr><td>8</td><td>Zwanzig knacken</td><td>20</td><td>Zwanzig knacken</td><td>Im Zehner addieren, Über den Zehner</td></tr>
+      <tr class="examples-row"><td colspan="5"><span>11+9</span><span>12+8</span><span>13+7</span><span>14+6</span><span>15+5</span><span>9+11</span><span>8+12</span><span>7+13</span><span>6+14</span><span>16+4</span></td></tr>
+      <tr><td>9</td><td>Im Zehner (−)</td><td>20</td><td>Im Zehner (−), Über den Zehner zurück</td><td>Zwanzig knacken, Im Zehner addieren</td></tr>
+      <tr class="examples-row"><td colspan="5"><span>15−4</span><span>16−5</span><span>17−6</span><span>14−4</span><span>18−7</span><span>11−4</span><span>12−5</span><span>13−6</span><span>14−7</span><span>15−8</span></td></tr>
+      <tr><td>10</td><td>Meister-Runde</td><td>20</td><td>alle Gruppen (gewichtet schwer)</td><td>—</td></tr>
+      <tr class="examples-row"><td colspan="5"><span>7+8</span><span>6+9</span><span>15−8</span><span>13−7</span><span>14+6</span><span>18−9</span><span>9+9</span><span>11+9</span><span>20−13</span><span>16−9</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Parameter</h3>
+  <table class="param-table">
+    <thead><tr><th>Parameter</th><th>Wert</th><th>Beschreibung</th></tr></thead>
+    <tbody>
+      <tr><td>Aufgaben pro Runde</td><td>10</td><td>Jede Runde hat genau 10 Aufgaben</td></tr>
+      <tr><td>Fokus-Anteil</td><td>70%</td><td>Aufgaben aus den Fokus-Strategiegruppen des Levels</td></tr>
+      <tr><td>Wiederholungs-Anteil</td><td>30%</td><td>Aufgaben aus früheren Strategiegruppen</td></tr>
+      <tr><td>Sterne pro Runde</td><td>0–3</td><td>10/10 = 3 Sterne, 9/10 = 2, 8/10 = 1, ≤7/10 = 0</td></tr>
+      <tr><td>Sterne zum Freischalten</td><td>5</td><td>5 Sterne im aktuellen Level schalten das nächste frei</td></tr>
+      <tr><td>Bestenliste</td><td>pro Level</td><td>Nur perfekte Runden (10/10), sortiert nach Zeit</td></tr>
+    </tbody>
+  </table>
+
+  <p class="param-note">
+    <strong>Aufbau:</strong> Zuerst Addition (Level 1–4), dann Subtraktion (Level 5–6, Zahlenraum 0–10),
+    dann beides im Zahlenraum 0–20 (Level 7–9). Level 10 ist die Meister-Runde mit allen Gruppen,
+    gewichtet auf schwierige Aufgaben.<br><br>
+    <strong>Pool-Auffüllung:</strong> Wenn ein Topf (z.B. Fokus) weniger Aufgaben hat als benötigt,
+    werden die restlichen Plätze aus dem kombinierten Pool (Fokus + Wiederholung) gefüllt.
+  </p>
+</div>
+
+</body>
+</html>
