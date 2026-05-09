@@ -35,7 +35,10 @@ select distinct on (p.id, r.stufe)
   r.finished_at as best_date
 from players p
 join rounds r on r.player_id = p.id
-where r.finished_at is not null and r.correct_count = 10 and r.battle_id is null
+where r.finished_at is not null
+  and r.correct_count = 10
+  and r.battle_id is null
+  and r.started_at >= date_trunc('week', now())
 order by p.id, r.stufe, (r.finished_at - r.started_at) asc;
 
 -- RLS: permissive for classroom use (no auth)

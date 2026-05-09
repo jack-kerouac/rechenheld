@@ -21,26 +21,30 @@ function formatInterval(interval: string): { short: string; long: string } {
 
 function formatDateShort(dateStr: string): string {
   const d = new Date(dateStr);
-  return d.toLocaleDateString("de-DE", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
+  const weekday = d.toLocaleDateString("de-DE", { weekday: "short" });
+  const time = d.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
+  return `${weekday} ${time}`;
 }
 
 function formatDateLong(dateStr: string): string {
   const d = new Date(dateStr);
-  const date = d.toLocaleDateString("de-DE", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-  const time = d.toLocaleTimeString("de-DE", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-  return `${date}, ${time} Uhr`;
+  const weekday = d.toLocaleDateString("de-DE", { weekday: "long" });
+  const time = d.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
+  return `${weekday}, ${time} Uhr`;
+}
+
+function getWeekRange(): string {
+  const now = new Date();
+  const daysFromMonday = now.getDay() === 0 ? 6 : now.getDay() - 1;
+  const start = new Date(now);
+  start.setDate(now.getDate() - daysFromMonday);
+  const end = new Date(start);
+  end.setDate(start.getDate() + 6);
+  const endStr = `${end.getDate()}. ${end.toLocaleDateString("de-DE", { month: "long" })}`;
+  if (start.getMonth() === end.getMonth()) {
+    return `${start.getDate()}. – ${endStr}`;
+  }
+  return `${start.getDate()}. ${start.toLocaleDateString("de-DE", { month: "long" })} – ${endStr}`;
 }
 
 function BestenlisteContent() {
@@ -76,6 +80,7 @@ function BestenlisteContent() {
   return (
     <div className="flex flex-col items-center gap-6 pt-8">
       <h1 className="text-3xl font-bold">Bestenliste</h1>
+      <p className="text-lg font-semibold text-blue-600">Diese Woche ({getWeekRange()})</p>
 
       <div className="flex flex-col w-full gap-2">
         {STUFEN.map((s) => (
@@ -96,7 +101,7 @@ function BestenlisteContent() {
       <p className="text-sm text-gray-500">Nur perfekte Runden (10 von 10 richtig)</p>
 
       {entries.length === 0 ? (
-        <p className="text-xl text-gray-400 mt-8">Noch keine Einträge!</p>
+        <p className="text-xl text-gray-400 mt-8">Diese Woche noch keine Einträge!</p>
       ) : (
         <div className="w-full space-y-2">
           {entries.map((entry, i) => (
