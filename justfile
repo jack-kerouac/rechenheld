@@ -9,7 +9,7 @@ stop:
 
 # Deploy Supabase migrations
 deploy-db:
-    npx supabase db push
+    supabase db push
 
 # Deploy frontend to Vercel
 deploy-frontend:
