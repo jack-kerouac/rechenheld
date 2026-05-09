@@ -3,17 +3,12 @@
 import { Suspense, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import { LeaderboardEntry, OpMode } from "@/lib/types";
+import { LeaderboardEntry, Stufe, STUFE_LABELS } from "@/lib/types";
 import Link from "next/link";
 
-const RANGES = [10, 20, 30];
-const OP_MODES: { value: OpMode; label: string }[] = [
-  { value: "plus", label: "Nur +" },
-  { value: "plus-minus", label: "+ und −" },
-];
+const STUFEN: Stufe[] = [1, 2, 3];
 
 function formatInterval(interval: string): { short: string; long: string } {
-  // PostgreSQL interval like "00:00:12.345" → "12,3 Sekunden"
   const match = interval.match(/(\d+):(\d+):(\d+)\.?(\d*)/);
   if (!match) return { short: interval, long: interval };
   const hours = parseInt(match[1]);
@@ -52,36 +47,27 @@ function BestenlisteContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const initialRange = Number(searchParams.get("range")) || 10;
-  const initialOp = (searchParams.get("op") as OpMode) || "plus";
-
-  const [range, setRange] = useState(
-    RANGES.includes(initialRange) ? initialRange : 10
-  );
-  const [opMode, setOpMode] = useState<OpMode>(
-    OP_MODES.some((m) => m.value === initialOp) ? initialOp : "plus"
+  const initialStufe = Number(searchParams.get("stufe")) as Stufe;
+  const [stufe, setStufe] = useState<Stufe>(
+    STUFEN.includes(initialStufe) ? initialStufe : 1
   );
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
 
-  function updateFilter(newRange: number, newOp: OpMode) {
-    setRange(newRange);
-    setOpMode(newOp);
-    router.replace(`/bestenliste?range=${newRange}&op=${newOp}`, {
-      scroll: false,
-    });
+  function updateFilter(newStufe: Stufe) {
+    setStufe(newStufe);
+    router.replace(`/bestenliste?stufe=${newStufe}`, { scroll: false });
   }
 
   useEffect(() => {
     loadLeaderboard();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [range, opMode]);
+  }, [stufe]);
 
   async function loadLeaderboard() {
     const { data } = await supabase
       .from("leaderboard")
       .select("*")
-      .eq("number_range", range)
-      .eq("op_mode", opMode)
+      .eq("stufe", stufe)
       .order("best_time", { ascending: true })
       .limit(20);
     if (data) setEntries(data as LeaderboardEntry[]);
@@ -91,34 +77,18 @@ function BestenlisteContent() {
     <div className="flex flex-col items-center gap-6 pt-8">
       <h1 className="text-3xl font-bold">Bestenliste</h1>
 
-      <div className="flex gap-2">
-        {OP_MODES.map((m) => (
+      <div className="flex flex-col w-full gap-2">
+        {STUFEN.map((s) => (
           <button
-            key={m.value}
-            onClick={() => updateFilter(range, m.value)}
-            className={`px-4 py-2 text-lg font-bold rounded-xl ${
-              opMode === m.value
+            key={s}
+            onClick={() => updateFilter(s)}
+            className={`w-full px-4 py-2 text-lg font-bold rounded-xl ${
+              stufe === s
                 ? "bg-yellow-400"
                 : "bg-gray-100 active:bg-gray-200"
             }`}
           >
-            {m.label}
-          </button>
-        ))}
-      </div>
-
-      <div className="flex gap-2">
-        {RANGES.map((r) => (
-          <button
-            key={r}
-            onClick={() => updateFilter(r, opMode)}
-            className={`px-4 py-2 text-lg font-bold rounded-xl ${
-              range === r
-                ? "bg-yellow-400"
-                : "bg-gray-100 active:bg-gray-200"
-            }`}
-          >
-            bis {r}
+            Stufe {s}: {STUFE_LABELS[s]}
           </button>
         ))}
       </div>

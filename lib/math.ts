@@ -1,27 +1,25 @@
-import { Calculation, Op, OpMode } from "./types";
+import { Calculation } from "./types";
 
 export function generateCalculations(
-  range: number,
-  count: number,
-  opMode: OpMode = "plus-minus"
+  stufe: 1 | 2 | 3,
+  count: number
 ): Calculation[] {
-  const pool = buildPool(range, opMode);
+  const pool = buildPool(stufe);
   shuffle(pool);
   return pool.slice(0, count);
 }
 
-function buildPool(range: number, opMode: OpMode): Calculation[] {
+function buildPool(stufe: 1 | 2 | 3): Calculation[] {
   const pool: Calculation[] = [];
+  const range = stufe <= 2 ? 10 : 20;
 
-  if (opMode === "plus" || opMode === "plus-minus") {
-    for (let a = 0; a <= range; a++) {
-      for (let b = 0; b <= range - a; b++) {
-        pool.push({ a, b, op: "+", answer: a + b });
-      }
+  for (let a = 0; a <= range; a++) {
+    for (let b = 0; b <= range - a; b++) {
+      pool.push({ a, b, op: "+", answer: a + b });
     }
   }
 
-  if (opMode === "plus-minus") {
+  if (stufe >= 2) {
     for (let a = 0; a <= range; a++) {
       for (let b = 0; b <= a; b++) {
         pool.push({ a, b, op: "-", answer: a - b });

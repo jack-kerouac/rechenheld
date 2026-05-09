@@ -1,22 +1,23 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Calculation } from "@/lib/types";
+import { Calculation, Stufe } from "@/lib/types";
 
 export function CalculationCard({
   calculation,
-  numberRange,
+  stufe,
   onAnswer,
   onBack,
   onCancel,
 }: {
   calculation: Calculation;
-  numberRange: number;
+  stufe: Stufe;
   onAnswer: (answer: number) => void;
   onBack?: (() => void) | null;
   onCancel?: () => void;
 }) {
-  const answers = Array.from({ length: numberRange + 1 }, (_, i) => i);
+  const maxAnswer = stufe <= 2 ? 10 : 20;
+  const answers = Array.from({ length: maxAnswer + 1 }, (_, i) => i);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
 
   const handleAnswer = useCallback(
@@ -38,19 +39,18 @@ export function CalculationCard({
       if (keyTimer.current) clearTimeout(keyTimer.current);
 
       const buf = keyBuffer.current;
-      const maxDigits = String(numberRange).length;
-      // Submit immediately if buffer is full, or first digit can't start a valid multi-digit number
+      const maxDigits = String(maxAnswer).length;
       const firstDigit = parseInt(buf[0], 10);
-      const couldBeMultiDigit = firstDigit * 10 <= numberRange;
+      const couldBeMultiDigit = firstDigit * 10 <= maxAnswer;
       if (buf.length >= maxDigits || (buf.length === 1 && !couldBeMultiDigit)) {
         const n = parseInt(buf, 10);
         keyBuffer.current = "";
-        if (n <= numberRange) handleAnswer(n);
+        if (n <= maxAnswer) handleAnswer(n);
       } else {
         keyTimer.current = setTimeout(() => {
           const n = parseInt(keyBuffer.current, 10);
           keyBuffer.current = "";
-          if (n <= numberRange) handleAnswer(n);
+          if (n <= maxAnswer) handleAnswer(n);
         }, 200);
       }
     }
@@ -59,7 +59,7 @@ export function CalculationCard({
       window.removeEventListener("keydown", onKeyDown);
       if (keyTimer.current) clearTimeout(keyTimer.current);
     };
-  }, [handleAnswer, numberRange]);
+  }, [handleAnswer, maxAnswer]);
 
   return (
     <div className="flex flex-col items-center gap-4 w-full animate-fade-in">
@@ -69,11 +69,9 @@ export function CalculationCard({
 
       <div
         className={`grid w-full max-w-sm mt-2 px-4 ${
-          numberRange <= 10
+          maxAnswer <= 10
             ? "grid-cols-3 gap-2 text-4xl"
-            : numberRange <= 20
-              ? "grid-cols-4 gap-2 text-3xl"
-              : "grid-cols-5 gap-2 text-2xl"
+            : "grid-cols-4 gap-2 text-3xl"
         }`}
         style={{ touchAction: "none" }}
       >

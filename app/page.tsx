@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { usePlayer } from "@/components/player-provider";
 import { supabase } from "@/lib/supabase";
-import { Battle, Player } from "@/lib/types";
+import { Battle, Player, STUFE_LABELS } from "@/lib/types";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -155,7 +155,7 @@ export default function Home() {
                 {c.challenger.name} hat dich herausgefordert!
               </div>
               <div className="text-lg mt-1">
-                Zahlenraum bis {c.number_range}
+                Stufe {c.stufe}: {STUFE_LABELS[c.stufe]}
               </div>
               <div className="mt-2 inline-block px-6 py-2 bg-yellow-400 font-bold text-xl rounded-xl">
                 Annehmen!
@@ -185,7 +185,7 @@ export default function Home() {
           )}
         </Link>
         <Link
-          href="/bestenliste?range=10&op=plus"
+          href="/bestenliste?stufe=1"
           className="block w-full py-5 text-2xl font-bold text-center bg-amber-400 rounded-xl active:bg-amber-500"
         >
           🏆 Bestenliste

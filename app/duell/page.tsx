@@ -4,11 +4,11 @@ import { useState, useEffect } from "react";
 import { usePlayer } from "@/components/player-provider";
 import { supabase } from "@/lib/supabase";
 import { generateCalculations } from "@/lib/math";
-import { Battle, OpMode, Player, Round } from "@/lib/types";
+import { Battle, Player, Round, Stufe, STUFE_LABELS } from "@/lib/types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-const RANGES = [10, 20, 30];
+const STUFEN: Stufe[] = [1, 2, 3];
 
 export default function DuellPage() {
   const { player } = usePlayer();
@@ -19,8 +19,7 @@ export default function DuellPage() {
   >([]);
   const [creating, setCreating] = useState(false);
   const [selectedOpponent, setSelectedOpponent] = useState<string>("");
-  const [selectedRange, setSelectedRange] = useState<number>(0);
-  const [selectedOpMode, setSelectedOpMode] = useState<OpMode | "">("");
+  const [selectedStufe, setSelectedStufe] = useState<Stufe | null>(null);
 
   useEffect(() => {
     if (!player) return;
@@ -53,17 +52,15 @@ export default function DuellPage() {
   }
 
   async function createChallenge() {
-    if (!selectedOpponent || !selectedRange || !selectedOpMode || !player)
-      return;
+    if (!selectedOpponent || !selectedStufe || !player) return;
 
-    const calcs = generateCalculations(selectedRange, 10, selectedOpMode);
+    const calcs = generateCalculations(selectedStufe, 10);
     const { data, error } = await supabase
       .from("battles")
       .insert({
         challenger_id: player.id,
         opponent_id: selectedOpponent,
-        number_range: selectedRange,
-        op_mode: selectedOpMode,
+        stufe: selectedStufe,
         calculations: calcs,
       })
       .select("id")
@@ -117,47 +114,26 @@ export default function DuellPage() {
 
           {selectedOpponent && (
             <>
-              <h2 className="text-xl font-bold mt-4">Rechenart:</h2>
-              <div className="flex gap-2">
-                {([["plus", "Nur +"], ["plus-minus", "+ und −"]] as const).map(([mode, label]) => (
+              <h2 className="text-xl font-bold mt-4">Stufe wählen:</h2>
+              <div className="flex flex-col gap-2">
+                {STUFEN.map((s) => (
                   <button
-                    key={mode}
-                    onClick={() => setSelectedOpMode(mode)}
-                    className={`flex-1 py-3 text-xl font-bold rounded-xl ${
-                      selectedOpMode === mode
+                    key={s}
+                    onClick={() => setSelectedStufe(s)}
+                    className={`w-full py-3 text-xl font-bold rounded-xl ${
+                      selectedStufe === s
                         ? "bg-amber-500 text-white"
                         : "bg-white active:bg-gray-100"
                     }`}
                   >
-                    {label}
+                    Stufe {s}: {STUFE_LABELS[s]}
                   </button>
                 ))}
               </div>
             </>
           )}
 
-          {selectedOpponent && selectedOpMode && (
-            <>
-              <h2 className="text-xl font-bold mt-4">Zahlenraum:</h2>
-              <div className="flex gap-2">
-                {RANGES.map((r) => (
-                  <button
-                    key={r}
-                    onClick={() => setSelectedRange(r)}
-                    className={`flex-1 py-3 text-xl font-bold rounded-xl ${
-                      selectedRange === r
-                        ? "bg-amber-500 text-white"
-                        : "bg-white active:bg-gray-100"
-                    }`}
-                  >
-                    bis {r}
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
-
-          {selectedOpponent && selectedOpMode && selectedRange > 0 && (
+          {selectedOpponent && selectedStufe && (
             <button
               onClick={createChallenge}
               className="w-full py-4 text-xl font-bold bg-green-500 text-white rounded-xl active:bg-green-600"
@@ -170,8 +146,7 @@ export default function DuellPage() {
             onClick={() => {
               setCreating(false);
               setSelectedOpponent("");
-              setSelectedOpMode("");
-              setSelectedRange(0);
+              setSelectedStufe(null);
             }}
             className="w-full py-3 text-xl font-bold bg-gray-200 text-gray-500 rounded-xl active:bg-gray-300"
           >
@@ -221,8 +196,9 @@ export default function DuellPage() {
                       {isChallenger ? otherName : "Dich"}
                     </span>
                     <div className="flex gap-1 mt-1">
-                      <span className="text-sm bg-purple-100 text-purple-700 px-2 py-0.5 rounded font-medium">{b.op_mode === "plus" ? "Nur +" : "+ und −"}</span>
-                      <span className="text-sm bg-teal-100 text-teal-700 px-2 py-0.5 rounded font-medium">Bis {b.number_range}</span>
+                      <span className="text-sm bg-purple-100 text-purple-700 px-2 py-0.5 rounded font-medium">
+                        Stufe {b.stufe}: {STUFE_LABELS[b.stufe]}
+                      </span>
                     </div>
                     <div className="text-sm text-gray-400">
                       {new Date(b.created_at).toLocaleDateString("de-DE", { weekday: "long", day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Berlin" })}

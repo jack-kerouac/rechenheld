@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { usePlayer } from "@/components/player-provider";
 import { generateCalculations } from "@/lib/math";
-import { CalculationWithInput, OpMode } from "@/lib/types";
+import { CalculationWithInput, Stufe, STUFE_LABELS } from "@/lib/types";
 import { CalculationCard } from "@/components/calculation-card";
 import { Timer } from "@/components/timer";
 import { supabase } from "@/lib/supabase";
@@ -12,22 +12,21 @@ import { useRouter } from "next/navigation";
 
 type Phase = "setup" | "solving";
 
-const RANGES = [10, 20, 30];
+const STUFEN: Stufe[] = [1, 2, 3];
 const COUNT = 10;
 
 export default function UebenPage() {
   const { player } = usePlayer();
   const router = useRouter();
   const [phase, setPhase] = useState<Phase>("setup");
-  const [opMode, setOpMode] = useState<OpMode | "">("");
+  const [stufe, setStufe] = useState<Stufe | null>(null);
   const [calculations, setCalculations] = useState<CalculationWithInput[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [startedAt, setStartedAt] = useState<Date | null>(null);
-  const [numberRange, setNumberRange] = useState(0);
 
   function startRound() {
-    if (!opMode || !numberRange) return;
-    const calcs = generateCalculations(numberRange, COUNT, opMode);
+    if (!stufe) return;
+    const calcs = generateCalculations(stufe, COUNT);
     setCalculations(calcs.map((c) => ({ ...c })));
     setCurrentIndex(0);
     setStartedAt(new Date());
@@ -51,8 +50,7 @@ export default function UebenPage() {
       if (player) {
         const { data } = await supabase.from("rounds").insert({
           player_id: player.id,
-          number_range: numberRange,
-          op_mode: opMode,
+          stufe,
           started_at: startedAt!.toISOString(),
           finished_at: finishedAt.toISOString(),
           correct_count: correctCount,
@@ -83,45 +81,24 @@ export default function UebenPage() {
       <div className="flex flex-col items-center gap-6 pt-8">
         <h1 className="text-3xl font-bold">Üben</h1>
         <div className="w-full space-y-4 p-4 bg-amber-50 rounded-xl">
-          <h2 className="text-xl font-bold">Rechenart:</h2>
-          <div className="flex gap-2">
-            {([["plus", "Nur +"], ["plus-minus", "+ und −"]] as const).map(([mode, label]) => (
+          <h2 className="text-xl font-bold">Stufe wählen:</h2>
+          <div className="flex flex-col gap-2">
+            {STUFEN.map((s) => (
               <button
-                key={mode}
-                onClick={() => setOpMode(mode)}
-                className={`flex-1 py-3 text-xl font-bold rounded-xl ${
-                  opMode === mode
+                key={s}
+                onClick={() => setStufe(s)}
+                className={`w-full py-3 text-xl font-bold rounded-xl ${
+                  stufe === s
                     ? "bg-amber-500 text-white"
                     : "bg-white active:bg-gray-100"
                 }`}
               >
-                {label}
+                Stufe {s}: {STUFE_LABELS[s]}
               </button>
             ))}
           </div>
 
-          {opMode && (
-            <>
-              <h2 className="text-xl font-bold mt-4">Zahlenraum:</h2>
-              <div className="flex gap-2">
-                {RANGES.map((r) => (
-                  <button
-                    key={r}
-                    onClick={() => setNumberRange(r)}
-                    className={`flex-1 py-3 text-xl font-bold rounded-xl ${
-                      numberRange === r
-                        ? "bg-amber-500 text-white"
-                        : "bg-white active:bg-gray-100"
-                    }`}
-                  >
-                    bis {r}
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
-
-          {opMode && numberRange > 0 && (
+          {stufe && (
             <>
               <p className="text-sm text-gray-500 text-center">💡 10 von 10 richtig? Deine Zeit kommt in die Bestenliste!</p>
               <button
@@ -149,7 +126,7 @@ export default function UebenPage() {
       <CalculationCard
         key={currentIndex}
         calculation={calculations[currentIndex]}
-        numberRange={numberRange}
+        stufe={stufe!}
         onAnswer={handleAnswer}
         onBack={currentIndex > 0 ? () => setCurrentIndex(currentIndex - 1) : null}
         onCancel={() => setPhase("setup")}
