@@ -11,7 +11,7 @@ create table battles (
   id uuid primary key default gen_random_uuid(),
   challenger_id uuid not null references players(id),
   opponent_id uuid references players(id),
-  number_range int not null,
+  stufe int not null check (stufe between 1 and 3),
   calculations jsonb not null,
   created_at timestamptz not null default now()
 );
@@ -19,7 +19,7 @@ create table battles (
 create table rounds (
   id uuid primary key default gen_random_uuid(),
   player_id uuid not null references players(id),
-  number_range int not null,
+  stufe int not null check (stufe between 1 and 3),
   started_at timestamptz not null,
   finished_at timestamptz,
   correct_count int,
@@ -29,15 +29,14 @@ create table rounds (
 );
 
 create view leaderboard as
-select
-  p.id as player_id, p.name, r.number_range,
-  count(*) as rounds_played,
-  min(r.finished_at - r.started_at) as best_time,
-  avg(r.correct_count) as avg_score
+select distinct on (p.id, r.stufe)
+  p.id as player_id, p.name, r.stufe,
+  (r.finished_at - r.started_at) as best_time,
+  r.finished_at as best_date
 from players p
 join rounds r on r.player_id = p.id
 where r.finished_at is not null and r.correct_count = 10 and r.battle_id is null
-group by p.id, p.name, r.number_range;
+order by p.id, r.stufe, (r.finished_at - r.started_at) asc;
 
 -- RLS: permissive for classroom use (no auth)
 alter table players enable row level security;

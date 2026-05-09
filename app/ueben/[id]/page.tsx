@@ -46,8 +46,7 @@ export default function RoundResultPage() {
         const { data: board } = await supabase
           .from("leaderboard")
           .select("player_id, best_time")
-          .eq("number_range", data.number_range)
-          .eq("op_mode", data.op_mode)
+          .eq("stufe", data.stufe)
           .order("best_time", { ascending: true });
         if (board) {
           const rank = board.findIndex((e) => e.player_id === player.id);
@@ -58,7 +57,6 @@ export default function RoundResultPage() {
               new Date(data.started_at).getTime();
             const diff = roundMs - bestTimeMs;
             if (diff <= 0) {
-              // New best or first entry — show rank
               setLeaderboardRank(rank + 1);
             } else {
               setBestTimeDiffMs(diff);
@@ -96,8 +94,7 @@ export default function RoundResultPage() {
         elapsedMs={elapsedMs}
         leaderboardRank={leaderboardRank}
         bestTimeDiffMs={bestTimeDiffMs}
-        numberRange={round.number_range}
-        opMode={round.op_mode}
+        stufe={round.stufe}
       />
     </div>
   );

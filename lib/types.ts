@@ -1,6 +1,12 @@
 export type Op = "+" | "-";
 
-export type OpMode = "plus" | "plus-minus";
+export type Stufe = 1 | 2 | 3;
+
+export const STUFE_LABELS: Record<Stufe, string> = {
+  1: "Addition bis 10",
+  2: "+ und − bis 10",
+  3: "+ und − bis 20",
+};
 
 export type Calculation = {
   a: number;
@@ -21,8 +27,7 @@ export type Player = {
 export type Round = {
   id: string;
   player_id: string;
-  number_range: number;
-  op_mode: OpMode;
+  stufe: Stufe;
   started_at: string;
   finished_at: string | null;
   correct_count: number | null;
@@ -34,8 +39,7 @@ export type Battle = {
   id: string;
   challenger_id: string;
   opponent_id: string | null;
-  number_range: number;
-  op_mode: OpMode;
+  stufe: Stufe;
   calculations: Calculation[];
   created_at: string;
 };
@@ -43,8 +47,7 @@ export type Battle = {
 export type LeaderboardEntry = {
   player_id: string;
   name: string;
-  number_range: number;
-  op_mode: OpMode;
+  stufe: Stufe;
   best_time: string;
   best_date: string;
 };

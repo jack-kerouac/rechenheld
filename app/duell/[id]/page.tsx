@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useParams } from "next/navigation";
 import { usePlayer } from "@/components/player-provider";
 import { supabase } from "@/lib/supabase";
-import { Battle, CalculationWithInput, Round } from "@/lib/types";
+import { Battle, CalculationWithInput, Round, STUFE_LABELS } from "@/lib/types";
 import { CalculationCard } from "@/components/calculation-card";
 import { Timer } from "@/components/timer";
 import Link from "next/link";
@@ -40,7 +40,6 @@ export default function BattlePage() {
     const opponentId =
       b.challenger_id === player.id ? b.opponent_id : b.challenger_id;
 
-    // Load opponent name and rounds in parallel
     const [opponentResult, roundsResult] = await Promise.all([
       opponentId
         ? supabase.from("players").select("name").eq("id", opponentId).single()
@@ -80,7 +79,6 @@ export default function BattlePage() {
     loadBattle();
   }, [loadBattle]);
 
-  // Subscribe to round changes for this battle
   useEffect(() => {
     if (!battle || phase !== "waiting") return;
 
@@ -128,11 +126,9 @@ export default function BattlePage() {
         (c) => c.playerAnswer === c.answer
       ).length;
 
-      // Save round
       await supabase.from("rounds").insert({
         player_id: player!.id,
-        number_range: battle!.number_range,
-        op_mode: battle!.op_mode,
+        stufe: battle!.stufe,
         started_at: startedAt!.toISOString(),
         finished_at: finishedAt.toISOString(),
         correct_count: correctCount,
@@ -159,8 +155,6 @@ export default function BattlePage() {
     return <div className="text-center pt-12 text-xl">Laden...</div>;
   }
 
-  const opModeLabel = battle?.op_mode === "plus" ? "Nur +" : "+ und −";
-
   if (phase === "ready") {
     return (
       <div className="flex flex-col items-center gap-6 pt-12">
@@ -170,10 +164,11 @@ export default function BattlePage() {
             Gegen <span className="font-bold">{opponentName}</span>
           </p>
         )}
-        <div className="flex gap-2">
-          <span className="text-sm bg-purple-100 text-purple-700 px-2 py-0.5 rounded font-medium">{opModeLabel}</span>
-          <span className="text-sm bg-teal-100 text-teal-700 px-2 py-0.5 rounded font-medium">Bis {battle?.number_range}</span>
-        </div>
+        {battle && (
+          <span className="text-sm bg-purple-100 text-purple-700 px-2 py-0.5 rounded font-medium">
+            Stufe {battle.stufe}: {STUFE_LABELS[battle.stufe]}
+          </span>
+        )}
         <p className="text-lg text-gray-500">
           {calculations.length} Aufgaben
         </p>
@@ -200,7 +195,7 @@ export default function BattlePage() {
         <CalculationCard
           key={currentIndex}
           calculation={calculations[currentIndex]}
-          numberRange={battle!.number_range}
+          stufe={battle!.stufe}
           onAnswer={handleAnswer}
         />
       </div>
