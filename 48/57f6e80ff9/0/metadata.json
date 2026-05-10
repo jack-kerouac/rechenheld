@@ -1,0 +1,72 @@
+{
+  "cli_version": "0.6.1",
+  "checkpoint_id": "4857f6e80ff9",
+  "session_id": "c45e2d6c-2216-451f-9f5d-99c8f17c4d08",
+  "strategy": "manual-commit",
+  "created_at": "2026-05-10T17:38:34.31871Z",
+  "branch": "feature/push-notifications",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "app/api/push/send/route.ts",
+    "app/api/push/subscribe/route.ts",
+    "app/duell/page.tsx",
+    "components/player-provider.tsx"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-sonnet-4-6",
+  "turn_id": "15a0b3a4f226",
+  "checkpoint_transcript_start": 425,
+  "transcript_lines_at_start": 425,
+  "token_usage": {
+    "input_tokens": 25,
+    "cache_creation_tokens": 110769,
+    "cache_read_tokens": 575434,
+    "output_tokens": 7318,
+    "api_call_count": 13
+  },
+  "session_metrics": {
+    "turn_count": 16
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-05-10T17:38:34.300811Z",
+    "agent_lines": 5,
+    "agent_removed": 33,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 5,
+    "total_lines_changed": 38,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 41,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".idea/.gitignore": 8,
+        ".idea/inspectionProfiles/Project_Default.xml": 7,
+        ".idea/modules.xml": 8,
+        ".idea/rechenheld.iml": 12,
+        ".idea/vcs.xml": 6
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 41,
+      "user_lines_removed": 0,
+      "agent_lines_added": 5,
+      "agent_lines_removed": 33,
+      "user_added_per_file": {
+        ".idea/.gitignore": 8,
+        ".idea/inspectionProfiles/Project_Default.xml": 7,
+        ".idea/modules.xml": 8,
+        ".idea/rechenheld.iml": 12,
+        ".idea/vcs.xml": 6
+      }
+    }
+  ]
+}

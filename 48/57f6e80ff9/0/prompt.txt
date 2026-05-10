@@ -1,0 +1,14 @@
+Let's discuss the implementation of the push notifications, and mainly whether to keep it with Vercel, or to switch to Supabase edge functions. So far, Vercel was just serving static content, right? No logic, no functions. So shouldn't we keep all server side logic with Supabase?
+Let's maybe also get some advice here.
+
+---
+
+Your argument treats web-push as an integral part. Is no push notification logic built into Supabase, using other libraries?
+
+---
+
+It's rather the latter. Assess the maturity of the Deno web-push again (subagent!). I for sure do not want to add another dependency (Firebase, other service, ...).
+
+---
+
+Alright. Is there anything else about this feature, that should be improved now. Any debug logging to remove? Use /simplify to look at the previous commit.
