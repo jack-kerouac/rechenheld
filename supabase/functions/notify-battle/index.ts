@@ -31,7 +31,10 @@ Deno.serve(async (req: Request) => {
     supabase.from("push_subscriptions").select("endpoint, p256dh, auth").eq("player_id", opponent_id),
   ]);
 
-  if (!subs?.length) return new Response("ok");
+  if (!subs?.length) {
+    console.log(`battle=${battleId} opponent=${opponent_id} no subscriptions`);
+    return new Response("ok");
+  }
 
   const challenger = players?.find((p) => p.id === challenger_id);
   const opponent = players?.find((p) => p.id === opponent_id);
@@ -51,12 +54,15 @@ Deno.serve(async (req: Request) => {
           keys: { p256dh: sub.p256dh, auth: sub.auth },
         });
         await subscriber.pushTextMessage(payload, { ttl: 86400 });
+        console.log(`battle=${battleId} pushed to ${sub.endpoint}`);
       } catch (err) {
         if (
           err instanceof PushMessageError &&
           (err.isGone() || err.response.status === 404)
         ) {
           dead.push(sub.endpoint);
+        } else {
+          console.error(`battle=${battleId} push failed for ${sub.endpoint}:`, err);
         }
       }
     }),
@@ -64,6 +70,7 @@ Deno.serve(async (req: Request) => {
 
   if (dead.length) {
     await supabase.from("push_subscriptions").delete().in("endpoint", dead);
+    console.log(`battle=${battleId} removed ${dead.length} dead subscription(s)`);
   }
 
   return new Response("ok");
