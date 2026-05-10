@@ -1,0 +1,25 @@
+/statusline
+
+---
+
+/statusline I want to see 1. current model and effort level, 2. the size of the current context in tokens and in percent, 3. the current 5h subscrioption session usage in percent and when it resets, 4, the current working directory (below ~/src/) and git branch, and 5. the time remaining until the 60min prompt cache eviction (based on the last assistant message).
+
+---
+
+Show the time remaining in the 5h session instead of when it resets. Prefix the context window section with 'ctx: ', rename '5h: ' with '5h session:'. Only show minutes for the cache, no seconds, and show 'expired' (in red), when it expired.
+
+---
+
+Update the status line every 10s.
+
+---
+
+Summarize the above prompts into a single one that yields the current statusline.
+
+---
+
+Summarize the above prompts into a single one that yields the current statusline and config in Claude settings.
+
+---
+
+In a separate session, I added caching to the script. Read the update script, and update the above prompt to include instructions for adding caching

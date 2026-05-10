@@ -1,0 +1,128 @@
+{
+  "cli_version": "0.6.1",
+  "checkpoint_id": "2f473aa2f292",
+  "session_id": "a2b47510-7a45-4534-b92b-b3ffab824400",
+  "strategy": "manual-commit",
+  "created_at": "2026-05-10T15:02:56.547406Z",
+  "branch": "feature/push-notifications",
+  "checkpoints_count": 5,
+  "files_touched": [
+    ".env.local.example",
+    "app/duell/page.tsx",
+    "components/player-provider.tsx",
+    "package-lock.json",
+    "package.json"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-sonnet-4-6",
+  "turn_id": "8758eb94cdec",
+  "token_usage": {
+    "input_tokens": 25,
+    "cache_creation_tokens": 34361,
+    "cache_read_tokens": 206152,
+    "output_tokens": 2793,
+    "api_call_count": 11
+  },
+  "session_metrics": {
+    "turn_count": 5
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-05-10T15:02:56.542666Z",
+    "agent_lines": 54,
+    "agent_removed": 3,
+    "human_added": 0,
+    "human_modified": 7,
+    "human_removed": 4,
+    "total_committed": 61,
+    "total_lines_changed": 68,
+    "agent_percentage": 83.82352941176471,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 372,
+      "user_lines_removed": 11,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".env.local.example": 2,
+        ".idea/.gitignore": 8,
+        ".idea/inspectionProfiles/Project_Default.xml": 7,
+        ".idea/modules.xml": 8,
+        ".idea/rechenheld.iml": 12,
+        ".idea/vcs.xml": 6,
+        "app/api/push/send/route.ts": 51,
+        "app/api/push/subscribe/route.ts": 27,
+        "app/duell/page.tsx": 22,
+        "components/player-provider.tsx": 43,
+        "package-lock.json": 146,
+        "package.json": 5,
+        "public/sw.js": 24,
+        "supabase/migrations/20260510000000_push_subscriptions.sql": 11
+      },
+      "user_removed_per_file": {
+        "app/duell/page.tsx": 1,
+        "components/player-provider.tsx": 2,
+        "package-lock.json": 4,
+        "package.json": 4
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 41,
+      "user_lines_removed": 0,
+      "agent_lines_added": 343,
+      "agent_lines_removed": 11,
+      "user_added_per_file": {
+        ".idea/.gitignore": 8,
+        ".idea/inspectionProfiles/Project_Default.xml": 7,
+        ".idea/modules.xml": 8,
+        ".idea/rechenheld.iml": 12,
+        ".idea/vcs.xml": 6
+      }
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 41,
+      "user_lines_removed": 0,
+      "agent_lines_added": 343,
+      "agent_lines_removed": 11,
+      "user_added_per_file": {
+        ".idea/.gitignore": 8,
+        ".idea/inspectionProfiles/Project_Default.xml": 7,
+        ".idea/modules.xml": 8,
+        ".idea/rechenheld.iml": 12,
+        ".idea/vcs.xml": 6
+      }
+    },
+    {
+      "checkpoint_number": 4,
+      "user_lines_added": 41,
+      "user_lines_removed": 0,
+      "agent_lines_added": 343,
+      "agent_lines_removed": 11,
+      "user_added_per_file": {
+        ".idea/.gitignore": 8,
+        ".idea/inspectionProfiles/Project_Default.xml": 7,
+        ".idea/modules.xml": 8,
+        ".idea/rechenheld.iml": 12,
+        ".idea/vcs.xml": 6
+      }
+    },
+    {
+      "checkpoint_number": 5,
+      "user_lines_added": 41,
+      "user_lines_removed": 0,
+      "agent_lines_added": 343,
+      "agent_lines_removed": 11,
+      "user_added_per_file": {
+        ".idea/.gitignore": 8,
+        ".idea/inspectionProfiles/Project_Default.xml": 7,
+        ".idea/modules.xml": 8,
+        ".idea/rechenheld.iml": 12,
+        ".idea/vcs.xml": 6
+      }
+    }
+  ]
+}

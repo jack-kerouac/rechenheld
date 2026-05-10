@@ -1,0 +1,29 @@
+{
+  "cli_version": "0.6.1",
+  "checkpoint_id": "2f473aa2f292",
+  "strategy": "manual-commit",
+  "branch": "feature/push-notifications",
+  "checkpoints_count": 5,
+  "files_touched": [
+    ".env.local.example",
+    "app/duell/page.tsx",
+    "components/player-provider.tsx",
+    "package-lock.json",
+    "package.json"
+  ],
+  "sessions": [
+    {
+      "metadata": "/2f/473aa2f292/0/metadata.json",
+      "transcript": "/2f/473aa2f292/0/full.jsonl",
+      "content_hash": "/2f/473aa2f292/0/content_hash.txt",
+      "prompt": "/2f/473aa2f292/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 25,
+    "cache_creation_tokens": 34361,
+    "cache_read_tokens": 206152,
+    "output_tokens": 2793,
+    "api_call_count": 11
+  }
+}
