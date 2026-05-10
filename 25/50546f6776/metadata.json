@@ -1,0 +1,27 @@
+{
+  "cli_version": "0.6.1",
+  "checkpoint_id": "2550546f6776",
+  "strategy": "manual-commit",
+  "branch": "feature/push-notifications",
+  "checkpoints_count": 3,
+  "files_touched": [
+    "supabase/functions/notify-battle/index.ts",
+    "supabase/migrations/20260510010002_enable_pg_net.sql",
+    "supabase/migrations/20260510010003_notify_battle_auth_header.sql"
+  ],
+  "sessions": [
+    {
+      "metadata": "/25/50546f6776/0/metadata.json",
+      "transcript": "/25/50546f6776/0/full.jsonl",
+      "content_hash": "/25/50546f6776/0/content_hash.txt",
+      "prompt": "/25/50546f6776/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 45,
+    "cache_creation_tokens": 22730,
+    "cache_read_tokens": 3070050,
+    "output_tokens": 15748,
+    "api_call_count": 32
+  }
+}

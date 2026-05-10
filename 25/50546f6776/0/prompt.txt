@@ -1,0 +1,26 @@
+Is vercel deploy --prod still required to be run?
+
+---
+
+Creating a new battle now fails with 400 and this body: {
+    "code": "3F000",
+    "details": null,
+    "hint": null,
+    "message": "schema \"net\" does not exist"
+}
+
+---
+
+Ok, now the battle was created, but I received no push notification.
+
+---
+
+Ok. Retry?
+
+---
+
+Now it worked, but with some delay. Can you analyze where the delay is coming from? Look at the edge function invocation logs.
+
+---
+
+Shall we add some logging to the edge function, e.g. one for each pushed notifications, and one for each deleted subscriptions, or so?
