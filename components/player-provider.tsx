@@ -126,13 +126,17 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
           applicationServerKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
         }));
 
-      const res = await fetch("/api/push/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ player_id: player.id, subscription: sub }),
-      });
+      const { error } = await supabase.from("push_subscriptions").upsert(
+        {
+          player_id: player.id,
+          endpoint: sub.endpoint,
+          p256dh: sub.toJSON().keys!.p256dh,
+          auth: sub.toJSON().keys!.auth,
+        },
+        { onConflict: "endpoint" }
+      );
 
-      if (!res.ok) return false;
+      if (error) return false;
 
       setNotificationsEnabled(true);
       return true;
