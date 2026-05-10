@@ -1,0 +1,33 @@
+{
+  "cli_version": "0.6.1",
+  "checkpoint_id": "c70e76a5b4b8",
+  "strategy": "manual-commit",
+  "branch": "feature/push-notifications",
+  "checkpoints_count": 7,
+  "files_touched": [
+    ".env.local.example",
+    "app/api/push/send/route.ts",
+    "app/duell/page.tsx",
+    "package-lock.json",
+    "package.json",
+    "supabase/functions/notify-battle/index.ts",
+    "supabase/migrations/20260510010000_notify_battle_webhook.sql",
+    "supabase/migrations/20260510010001_notify_battle_vault_secret.sql",
+    "tsconfig.json"
+  ],
+  "sessions": [
+    {
+      "metadata": "/c7/0e76a5b4b8/0/metadata.json",
+      "transcript": "/c7/0e76a5b4b8/0/full.jsonl",
+      "content_hash": "/c7/0e76a5b4b8/0/content_hash.txt",
+      "prompt": "/c7/0e76a5b4b8/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 96,
+    "cache_creation_tokens": 65410,
+    "cache_read_tokens": 3705371,
+    "output_tokens": 34710,
+    "api_call_count": 70
+  }
+}
