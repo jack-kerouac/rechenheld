@@ -112,47 +112,31 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   }
 
   async function subscribeToNotifications(): Promise<boolean> {
-    if (!player) {
-      alert("Nicht eingeloggt.");
-      return false;
-    }
-    if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
-      alert("Dieser Browser unterstützt keine Push-Benachrichtigungen.");
+    if (!player || !("serviceWorker" in navigator) || !("PushManager" in window)) {
       return false;
     }
     try {
       const reg = await navigator.serviceWorker.ready;
-      console.log("[push] SW ready:", reg.active?.state);
-
       const existing = await reg.pushManager.getSubscription();
-      console.log("[push] existing subscription:", existing?.endpoint ?? "none");
-
       const sub =
         existing ??
         (await reg.pushManager.subscribe({
           userVisibleOnly: true,
           applicationServerKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
         }));
-      console.log("[push] subscription endpoint:", sub.endpoint);
 
       const res = await fetch("/api/push/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ player_id: player.id, subscription: sub }),
       });
-      const json = await res.json();
-      console.log("[push] subscribe API response:", res.status, json);
 
-      if (!res.ok) {
-        alert(`Fehler beim Speichern der Subscription: ${json.error}`);
-        return false;
-      }
+      if (!res.ok) return false;
 
       setNotificationsEnabled(true);
       return true;
     } catch (err) {
       console.error("[push] subscribeToNotifications error:", err);
-      alert(`Fehler: ${err}`);
       return false;
     }
   }

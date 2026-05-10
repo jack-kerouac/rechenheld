@@ -1,14 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import { supabase } from "@/lib/supabase";
 
 export async function POST(req: NextRequest) {
   const { player_id, subscription } = await req.json();
-  console.log("[push/subscribe] player_id:", player_id, "endpoint:", subscription?.endpoint?.slice(0, 60));
 
   if (!player_id || !subscription?.endpoint) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
@@ -28,6 +22,5 @@ export async function POST(req: NextRequest) {
     console.error("[push/subscribe] DB error:", error.message);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
-  console.log("[push/subscribe] saved ok");
   return NextResponse.json({ ok: true });
 }

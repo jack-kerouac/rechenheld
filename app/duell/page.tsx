@@ -87,7 +87,7 @@ export default function DuellPage() {
         body: `${player.name} fordert ${opponentName} heraus!`,
         url: `/duell/${data.id}`,
       }),
-    });
+    }).catch(console.error);
 
     router.push(`/duell/${data.id}`);
   }
