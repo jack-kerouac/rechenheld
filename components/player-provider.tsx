@@ -59,13 +59,14 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       setPlayer(JSON.parse(stored));
     }
 
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/sw.js").catch(console.error);
+    async function initServiceWorker() {
+      if (!("serviceWorker" in navigator)) return;
+      await navigator.serviceWorker.register("/sw.js").catch(console.error);
+      const reg = await navigator.serviceWorker.ready;
+      const sub = await reg.pushManager.getSubscription().catch(() => null);
+      if (sub) setNotificationsEnabled(true);
     }
-
-    if ("Notification" in window && Notification.permission === "granted") {
-      setNotificationsEnabled(true);
-    }
+    initServiceWorker();
   }, []);
 
   async function login(name: string) {
