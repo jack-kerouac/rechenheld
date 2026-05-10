@@ -10,7 +10,7 @@ import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-type Phase = "setup" | "solving";
+type Phase = "setup" | "solving" | "submitting";
 
 const STUFEN: Stufe[] = [1, 2, 3];
 const COUNT = 10;
@@ -41,6 +41,7 @@ export default function UebenPage() {
     if (currentIndex + 1 < COUNT) {
       setCurrentIndex(currentIndex + 1);
     } else {
+      setPhase("submitting");
       const finishedAt = new Date();
 
       const correctCount = updated.filter(
@@ -113,6 +114,15 @@ export default function UebenPage() {
         <Link href="/" className="mt-4 px-6 py-3 text-xl font-bold bg-gray-200 text-gray-500 rounded-xl active:bg-gray-300">
           Zurück
         </Link>
+      </div>
+    );
+  }
+
+  if (phase === "submitting") {
+    return (
+      <div className="flex flex-col items-center gap-4 pt-12 text-center">
+        <div className="animate-pulse text-5xl">⏳</div>
+        <p className="text-xl text-gray-500">Einen Moment...</p>
       </div>
     );
   }

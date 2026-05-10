@@ -9,7 +9,7 @@ import { CalculationCard } from "@/components/calculation-card";
 import { Timer } from "@/components/timer";
 import Link from "next/link";
 
-type Phase = "loading" | "ready" | "solving" | "done" | "waiting";
+type Phase = "loading" | "ready" | "solving" | "submitting" | "done" | "waiting";
 
 export default function BattlePage() {
   const { id } = useParams<{ id: string }>();
@@ -118,6 +118,7 @@ export default function BattlePage() {
     if (currentIndex + 1 < calculations.length) {
       setCurrentIndex(currentIndex + 1);
     } else {
+      setPhase("submitting");
       const finishedAt = new Date();
       const ms = finishedAt.getTime() - startedAt!.getTime();
       setElapsedMs(ms);
@@ -181,6 +182,15 @@ export default function BattlePage() {
         <Link href="/duell" className="px-6 py-3 text-xl font-bold bg-gray-200 text-gray-500 rounded-xl active:bg-gray-300">
           Zurück
         </Link>
+      </div>
+    );
+  }
+
+  if (phase === "submitting") {
+    return (
+      <div className="flex flex-col items-center gap-4 pt-12 text-center">
+        <div className="animate-pulse text-5xl">⏳</div>
+        <p className="text-xl text-gray-500">Einen Moment...</p>
       </div>
     );
   }
