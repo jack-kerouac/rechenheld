@@ -29,14 +29,18 @@ type PlayerContextType = {
   player: Player | null;
   knownNames: string[];
   login: (name: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
+  notificationsEnabled: boolean;
+  subscribeToNotifications: () => Promise<boolean>;
 };
 
 const PlayerContext = createContext<PlayerContextType>({
   player: null,
   knownNames: [],
   login: async () => {},
-  logout: () => {},
+  logout: async () => {},
+  notificationsEnabled: false,
+  subscribeToNotifications: async () => false,
 });
 
 export function usePlayer() {
@@ -46,6 +50,7 @@ export function usePlayer() {
 export function PlayerProvider({ children }: { children: ReactNode }) {
   const [player, setPlayer] = useState<Player | null>(null);
   const [knownNames, setKnownNames] = useState<string[]>([]);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
 
   useEffect(() => {
     setKnownNames(getKnownNames());
@@ -53,13 +58,20 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     if (stored) {
       setPlayer(JSON.parse(stored));
     }
+
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js").catch(console.error);
+    }
+
+    if ("Notification" in window && Notification.permission === "granted") {
+      setNotificationsEnabled(true);
+    }
   }, []);
 
   async function login(name: string) {
     const trimmed = name.trim();
     if (!trimmed) return;
 
-    // Try to find existing player
     const { data: existing } = await supabase
       .from("players")
       .select("id, name")
@@ -85,13 +97,70 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     setKnownNames(getKnownNames());
   }
 
-  function logout() {
+  async function logout() {
+    if ("serviceWorker" in navigator) {
+      const reg = await navigator.serviceWorker.ready.catch(() => null);
+      const sub = await reg?.pushManager.getSubscription().catch(() => null);
+      if (sub) {
+        await supabase.from("push_subscriptions").delete().eq("endpoint", sub.endpoint);
+        await sub.unsubscribe();
+      }
+    }
+    setNotificationsEnabled(false);
     setPlayer(null);
     localStorage.removeItem("rechenheld_player");
   }
 
+  async function subscribeToNotifications(): Promise<boolean> {
+    if (!player) {
+      alert("Nicht eingeloggt.");
+      return false;
+    }
+    if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
+      alert("Dieser Browser unterstützt keine Push-Benachrichtigungen.");
+      return false;
+    }
+    try {
+      const reg = await navigator.serviceWorker.ready;
+      console.log("[push] SW ready:", reg.active?.state);
+
+      const existing = await reg.pushManager.getSubscription();
+      console.log("[push] existing subscription:", existing?.endpoint ?? "none");
+
+      const sub =
+        existing ??
+        (await reg.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
+        }));
+      console.log("[push] subscription endpoint:", sub.endpoint);
+
+      const res = await fetch("/api/push/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ player_id: player.id, subscription: sub }),
+      });
+      const json = await res.json();
+      console.log("[push] subscribe API response:", res.status, json);
+
+      if (!res.ok) {
+        alert(`Fehler beim Speichern der Subscription: ${json.error}`);
+        return false;
+      }
+
+      setNotificationsEnabled(true);
+      return true;
+    } catch (err) {
+      console.error("[push] subscribeToNotifications error:", err);
+      alert(`Fehler: ${err}`);
+      return false;
+    }
+  }
+
   return (
-    <PlayerContext.Provider value={{ player, knownNames, login, logout }}>
+    <PlayerContext.Provider
+      value={{ player, knownNames, login, logout, notificationsEnabled, subscribeToNotifications }}
+    >
       {children}
     </PlayerContext.Provider>
   );

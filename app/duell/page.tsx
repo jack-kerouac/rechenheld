@@ -11,8 +11,9 @@ import { useRouter } from "next/navigation";
 const STUFEN: Stufe[] = [1, 2, 3];
 
 export default function DuellPage() {
-  const { player } = usePlayer();
+  const { player, notificationsEnabled, subscribeToNotifications } = usePlayer();
   const router = useRouter();
+  const [isIOSBrowser, setIsIOSBrowser] = useState(false);
   const [players, setPlayers] = useState<Player[]>([]);
   const [battles, setBattles] = useState<
     (Battle & { challenger: Player; opponent: Player | null; rounds: Round[] })[]
@@ -20,6 +21,14 @@ export default function DuellPage() {
   const [creating, setCreating] = useState(false);
   const [selectedOpponent, setSelectedOpponent] = useState<string>("");
   const [selectedStufe, setSelectedStufe] = useState<Stufe | null>(null);
+
+  useEffect(() => {
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const isStandalone =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      (navigator as Navigator & { standalone?: boolean }).standalone === true;
+    setIsIOSBrowser(isIOS && !isStandalone);
+  }, []);
 
   useEffect(() => {
     if (!player) return;
@@ -68,6 +77,18 @@ export default function DuellPage() {
 
     if (error || !data) return;
 
+    const opponentName = players.find((p) => p.id === selectedOpponent)?.name ?? "Jemand";
+    fetch("/api/push/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        player_id: selectedOpponent,
+        title: "Rechenheld ⚔️",
+        body: `${player.name} fordert ${opponentName} heraus!`,
+        url: `/duell/${data.id}`,
+      }),
+    });
+
     router.push(`/duell/${data.id}`);
   }
 
@@ -85,6 +106,28 @@ export default function DuellPage() {
   return (
     <div className="flex flex-col items-center gap-6 pt-8">
       <h1 className="text-3xl font-bold">Duell</h1>
+
+      {!notificationsEnabled && (
+        isIOSBrowser ? (
+          <div className="w-full p-4 bg-blue-50 border border-blue-200 rounded-xl text-sm text-blue-800 space-y-2">
+            <p className="font-bold">🔔 Benachrichtigungen aktivieren</p>
+            <p>Auf iPhone/iPad muss die App zuerst installiert werden:</p>
+            <ol className="list-decimal ml-4 space-y-1">
+              <li>Tippe auf das Teilen-Symbol <strong>⬆</strong> in Safari</li>
+              <li>Wähle <strong>„Zum Home-Bildschirm"</strong></li>
+              <li>Öffne die App vom Home-Bildschirm aus</li>
+              <li>Aktiviere Benachrichtigungen in der App</li>
+            </ol>
+          </div>
+        ) : (
+          <button
+            onClick={subscribeToNotifications}
+            className="w-full py-3 text-base font-medium bg-blue-50 text-blue-700 border border-blue-200 rounded-xl active:bg-blue-100"
+          >
+            🔔 Benachrichtigungen aktivieren
+          </button>
+        )
+      )}
 
       {!creating ? (
         <button
