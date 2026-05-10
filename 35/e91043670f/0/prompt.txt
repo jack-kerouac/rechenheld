@@ -1,0 +1,5 @@
+Merge and deploy
+
+---
+
+Note in the CLAUDE.md file that no (Vercel) deployment when pushing to Github is set up. Deployments need to happen manually.
