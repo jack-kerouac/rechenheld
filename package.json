@@ -13,15 +13,13 @@
         "@supabase/supabase-js": "^2",
         "next": "^15",
         "react": "^19",
-        "react-dom": "^19",
-        "web-push": "^3.6.7"
+        "react-dom": "^19"
     },
     "devDependencies": {
         "@tailwindcss/postcss": "^4",
         "@types/node": "^22",
         "@types/react": "^19",
         "@types/react-dom": "^19",
-        "@types/web-push": "^3.6.4",
         "eslint": "^9",
         "eslint-config-next": "^15",
         "tailwindcss": "^4",

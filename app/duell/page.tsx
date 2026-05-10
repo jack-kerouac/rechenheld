@@ -77,18 +77,6 @@ export default function DuellPage() {
 
     if (error || !data) return;
 
-    const opponentName = players.find((p) => p.id === selectedOpponent)?.name ?? "Jemand";
-    fetch("/api/push/send", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        player_id: selectedOpponent,
-        title: "Rechenheld ⚔️",
-        body: `${player.name} fordert ${opponentName} heraus!`,
-        url: `/duell/${data.id}`,
-      }),
-    }).catch(console.error);
-
     router.push(`/duell/${data.id}`);
   }
 
