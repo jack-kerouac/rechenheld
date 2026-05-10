@@ -3,13 +3,17 @@
   "checkpoint_id": "2f473aa2f292",
   "strategy": "manual-commit",
   "branch": "feature/push-notifications",
-  "checkpoints_count": 5,
+  "checkpoints_count": 16,
   "files_touched": [
     ".env.local.example",
+    "app/api/push/send/route.ts",
+    "app/api/push/subscribe/route.ts",
     "app/duell/page.tsx",
     "components/player-provider.tsx",
     "package-lock.json",
-    "package.json"
+    "package.json",
+    "public/sw.js",
+    "supabase/migrations/20260510000000_push_subscriptions.sql"
   ],
   "sessions": [
     {
@@ -17,13 +21,19 @@
       "transcript": "/2f/473aa2f292/0/full.jsonl",
       "content_hash": "/2f/473aa2f292/0/content_hash.txt",
       "prompt": "/2f/473aa2f292/0/prompt.txt"
+    },
+    {
+      "metadata": "/2f/473aa2f292/1/metadata.json",
+      "transcript": "/2f/473aa2f292/1/full.jsonl",
+      "content_hash": "/2f/473aa2f292/1/content_hash.txt",
+      "prompt": "/2f/473aa2f292/1/prompt.txt"
     }
   ],
   "token_usage": {
-    "input_tokens": 25,
-    "cache_creation_tokens": 34361,
-    "cache_read_tokens": 206152,
-    "output_tokens": 2793,
-    "api_call_count": 11
+    "input_tokens": 148,
+    "cache_creation_tokens": 201279,
+    "cache_read_tokens": 5415964,
+    "output_tokens": 44121,
+    "api_call_count": 105
   }
 }

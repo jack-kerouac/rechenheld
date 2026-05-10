@@ -1,0 +1,70 @@
+Send push notifications to the recipient of a new challenge. Make sure they work on Android and iOS.
+If there are any special setup steps for receiving them on any of these platforms, let me know.
+
+---
+
+Continue
+
+---
+
+Ok, let's prototype and deploy it. I will then test it on my Android phone and my wife's iPhone. If I like it, let's then iterate over the tech.
+
+---
+
+Where is "Benachrichtigungen aktivieren"?
+
+---
+
+Got it. I was on the wrong page.
+I enabled notifications, got challenged for a battle, but received no notification. I started testing it on Chrome on Android. My wife did not enable notifications, though. But that should not matter, or? They should be sent from the server once a battle is created, or?
+
+---
+
+Continue
+
+---
+
+Continue
+
+---
+
+Got it. I was on the wrong page.
+I enabled notifications, got challenged for a battle, but received no notification. I started testing it on Chrome on Android. My wife did not enable notifications, though. But that should not matter, or? They should be sent from the server once a battle is created, or?
+
+---
+
+[push] SW ready: activated
+layout-19be8f730c639b49.js:1 [push] existing subscription: none
+layout-19be8f730c639b49.js:1 [push] subscription endpoint: https://fcm.googleapis.com/fcm/send/ekWUMScGwtM:REDACTED
+layout-19be8f730c639b49.js:1 [push] subscribe API response: 200 {ok: true}
+
+That whas on my Chrome on MacOS now, though.
+
+I just also went through the flow again on my Android phone.
+
+---
+
+Yes!
+
+---
+
+I might have refreshed my browser right after allowing notifications. Maybe that interrupted the server request.
+
+Do I receive notifications also with the phone off, the tab closed in the browser, or even the browser closed?
+
+---
+
+Yes, 24h TTL
+
+---
+
+When exactly is the notification sent? When I just start the duell? Or when I start playing it? Or when I finish it?
+
+---
+
+No, it's fine.
+Given that the extra steps of having to add the app to the home screen on iOS are required: Can we somehow show this in the app? Right now, it shows the request to allow notifications, but then nothing would happen without adding it to the homescreen...
+
+---
+
+If you sign-out and sign-in with another username, are the notifications correctly delivered only for the newly logged-in user?

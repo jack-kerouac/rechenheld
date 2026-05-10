@@ -1,0 +1,215 @@
+{
+  "cli_version": "0.6.1",
+  "checkpoint_id": "2f473aa2f292",
+  "session_id": "c45e2d6c-2216-451f-9f5d-99c8f17c4d08",
+  "strategy": "manual-commit",
+  "created_at": "2026-05-10T15:02:59.863076Z",
+  "branch": "feature/push-notifications",
+  "checkpoints_count": 11,
+  "files_touched": [
+    ".env.local.example",
+    "app/api/push/send/route.ts",
+    "app/api/push/subscribe/route.ts",
+    "app/duell/page.tsx",
+    "components/player-provider.tsx",
+    "package-lock.json",
+    "package.json",
+    "public/sw.js",
+    "supabase/migrations/20260510000000_push_subscriptions.sql"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-sonnet-4-6",
+  "turn_id": "dc1639ebe5b5",
+  "token_usage": {
+    "input_tokens": 123,
+    "cache_creation_tokens": 166918,
+    "cache_read_tokens": 5209812,
+    "output_tokens": 41328,
+    "api_call_count": 94
+  },
+  "session_metrics": {
+    "turn_count": 11
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-05-10T15:02:59.847049Z",
+    "agent_lines": 403,
+    "agent_removed": 14,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 403,
+    "total_lines_changed": 417,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 41,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".idea/.gitignore": 8,
+        ".idea/inspectionProfiles/Project_Default.xml": 7,
+        ".idea/modules.xml": 8,
+        ".idea/rechenheld.iml": 12,
+        ".idea/vcs.xml": 6
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 41,
+      "user_lines_removed": 0,
+      "agent_lines_added": 151,
+      "agent_lines_removed": 8,
+      "user_added_per_file": {
+        ".idea/.gitignore": 8,
+        ".idea/inspectionProfiles/Project_Default.xml": 7,
+        ".idea/modules.xml": 8,
+        ".idea/rechenheld.iml": 12,
+        ".idea/vcs.xml": 6
+      }
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 41,
+      "user_lines_removed": 0,
+      "agent_lines_added": 343,
+      "agent_lines_removed": 11,
+      "user_added_per_file": {
+        ".idea/.gitignore": 8,
+        ".idea/inspectionProfiles/Project_Default.xml": 7,
+        ".idea/modules.xml": 8,
+        ".idea/rechenheld.iml": 12,
+        ".idea/vcs.xml": 6
+      }
+    },
+    {
+      "checkpoint_number": 4,
+      "user_lines_added": 41,
+      "user_lines_removed": 0,
+      "agent_lines_added": 343,
+      "agent_lines_removed": 11,
+      "user_added_per_file": {
+        ".idea/.gitignore": 8,
+        ".idea/inspectionProfiles/Project_Default.xml": 7,
+        ".idea/modules.xml": 8,
+        ".idea/rechenheld.iml": 12,
+        ".idea/vcs.xml": 6
+      }
+    },
+    {
+      "checkpoint_number": 5,
+      "user_lines_added": 41,
+      "user_lines_removed": 0,
+      "agent_lines_added": 368,
+      "agent_lines_removed": 11,
+      "user_added_per_file": {
+        ".idea/.gitignore": 8,
+        ".idea/inspectionProfiles/Project_Default.xml": 7,
+        ".idea/modules.xml": 8,
+        ".idea/rechenheld.iml": 12,
+        ".idea/vcs.xml": 6
+      }
+    },
+    {
+      "checkpoint_number": 6,
+      "user_lines_added": 41,
+      "user_lines_removed": 0,
+      "agent_lines_added": 368,
+      "agent_lines_removed": 11,
+      "user_added_per_file": {
+        ".idea/.gitignore": 8,
+        ".idea/inspectionProfiles/Project_Default.xml": 7,
+        ".idea/modules.xml": 8,
+        ".idea/rechenheld.iml": 12,
+        ".idea/vcs.xml": 6
+      }
+    },
+    {
+      "checkpoint_number": 7,
+      "user_lines_added": 41,
+      "user_lines_removed": 0,
+      "agent_lines_added": 368,
+      "agent_lines_removed": 11,
+      "user_added_per_file": {
+        ".idea/.gitignore": 8,
+        ".idea/inspectionProfiles/Project_Default.xml": 7,
+        ".idea/modules.xml": 8,
+        ".idea/rechenheld.iml": 12,
+        ".idea/vcs.xml": 6
+      }
+    },
+    {
+      "checkpoint_number": 8,
+      "user_lines_added": 41,
+      "user_lines_removed": 0,
+      "agent_lines_added": 368,
+      "agent_lines_removed": 11,
+      "user_added_per_file": {
+        ".idea/.gitignore": 8,
+        ".idea/inspectionProfiles/Project_Default.xml": 7,
+        ".idea/modules.xml": 8,
+        ".idea/rechenheld.iml": 12,
+        ".idea/vcs.xml": 6
+      }
+    },
+    {
+      "checkpoint_number": 9,
+      "user_lines_added": 41,
+      "user_lines_removed": 0,
+      "agent_lines_added": 369,
+      "agent_lines_removed": 11,
+      "user_added_per_file": {
+        ".idea/.gitignore": 8,
+        ".idea/inspectionProfiles/Project_Default.xml": 7,
+        ".idea/modules.xml": 8,
+        ".idea/rechenheld.iml": 12,
+        ".idea/vcs.xml": 6
+      }
+    },
+    {
+      "checkpoint_number": 10,
+      "user_lines_added": 41,
+      "user_lines_removed": 0,
+      "agent_lines_added": 369,
+      "agent_lines_removed": 11,
+      "user_added_per_file": {
+        ".idea/.gitignore": 8,
+        ".idea/inspectionProfiles/Project_Default.xml": 7,
+        ".idea/modules.xml": 8,
+        ".idea/rechenheld.iml": 12,
+        ".idea/vcs.xml": 6
+      }
+    },
+    {
+      "checkpoint_number": 11,
+      "user_lines_added": 41,
+      "user_lines_removed": 0,
+      "agent_lines_added": 391,
+      "agent_lines_removed": 11,
+      "user_added_per_file": {
+        ".idea/.gitignore": 8,
+        ".idea/inspectionProfiles/Project_Default.xml": 7,
+        ".idea/modules.xml": 8,
+        ".idea/rechenheld.iml": 12,
+        ".idea/vcs.xml": 6
+      }
+    },
+    {
+      "checkpoint_number": 12,
+      "user_lines_added": 41,
+      "user_lines_removed": 0,
+      "agent_lines_added": 403,
+      "agent_lines_removed": 14,
+      "user_added_per_file": {
+        ".idea/.gitignore": 8,
+        ".idea/inspectionProfiles/Project_Default.xml": 7,
+        ".idea/modules.xml": 8,
+        ".idea/rechenheld.iml": 12,
+        ".idea/vcs.xml": 6
+      }
+    }
+  ]
+}
