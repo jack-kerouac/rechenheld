@@ -1,0 +1,67 @@
+{
+  "cli_version": "0.6.1",
+  "checkpoint_id": "33a2d41405cd",
+  "session_id": "222c72ab-f9a3-4f3e-a751-a2e3aa27c7ea",
+  "strategy": "manual-commit",
+  "created_at": "2026-05-10T18:48:30.121209Z",
+  "branch": "feature/push-notifications",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "components/player-provider.tsx"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-sonnet-4-6",
+  "turn_id": "8c7f0fb7cc3d",
+  "token_usage": {
+    "input_tokens": 12,
+    "cache_creation_tokens": 11734,
+    "cache_read_tokens": 167236,
+    "output_tokens": 1344,
+    "api_call_count": 8
+  },
+  "session_metrics": {
+    "turn_count": 2
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-05-10T18:48:30.116959Z",
+    "agent_lines": 7,
+    "agent_removed": 6,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 7,
+    "total_lines_changed": 13,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 41,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".idea/.gitignore": 8,
+        ".idea/inspectionProfiles/Project_Default.xml": 7,
+        ".idea/modules.xml": 8,
+        ".idea/rechenheld.iml": 12,
+        ".idea/vcs.xml": 6
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 41,
+      "user_lines_removed": 0,
+      "agent_lines_added": 7,
+      "agent_lines_removed": 6,
+      "user_added_per_file": {
+        ".idea/.gitignore": 8,
+        ".idea/inspectionProfiles/Project_Default.xml": 7,
+        ".idea/modules.xml": 8,
+        ".idea/rechenheld.iml": 12,
+        ".idea/vcs.xml": 6
+      }
+    }
+  ]
+}
