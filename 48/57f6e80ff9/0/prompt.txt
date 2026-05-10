@@ -12,3 +12,7 @@ It's rather the latter. Assess the maturity of the Deno web-push again (subagent
 ---
 
 Alright. Is there anything else about this feature, that should be improved now. Any debug logging to remove? Use /simplify to look at the previous commit.
+
+---
+
+/commit-commands:commit
