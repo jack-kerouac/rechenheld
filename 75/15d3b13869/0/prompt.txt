@@ -1,0 +1,1 @@
+When the last answer on a round is picked, the screen does not change, until a response from the server is received, both for "Üben" as well as for battles. This is a bit confusing. Show some spinner or similar to indicate that selecting the last answer worked.
