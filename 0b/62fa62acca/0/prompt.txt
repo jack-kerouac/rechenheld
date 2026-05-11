@@ -1,0 +1,1 @@
+On iOS, when asking to enable notifications for duells, when showing an error that notifications are not supported, explain in simple steps how to add the app to the home screen on iOS, so that notifications can be enabled.
