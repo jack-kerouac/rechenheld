@@ -14,6 +14,8 @@ export default function DuellPage() {
   const { player, notificationsEnabled, subscribeToNotifications } = usePlayer();
   const router = useRouter();
   const [isIOSBrowser, setIsIOSBrowser] = useState(false);
+  const [isIOS, setIsIOS] = useState(false);
+  const [subscriptionError, setSubscriptionError] = useState(false);
   const [players, setPlayers] = useState<Player[]>([]);
   const [battles, setBattles] = useState<
     (Battle & { challenger: Player; opponent: Player | null; rounds: Round[] })[]
@@ -23,11 +25,12 @@ export default function DuellPage() {
   const [selectedStufe, setSelectedStufe] = useState<Stufe | null>(null);
 
   useEffect(() => {
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const ios = /iPad|iPhone|iPod/.test(navigator.userAgent);
     const isStandalone =
       window.matchMedia("(display-mode: standalone)").matches ||
       (navigator as Navigator & { standalone?: boolean }).standalone === true;
-    setIsIOSBrowser(isIOS && !isStandalone);
+    setIsIOS(ios);
+    setIsIOSBrowser(ios && !isStandalone);
   }, []);
 
   useEffect(() => {
@@ -108,12 +111,33 @@ export default function DuellPage() {
             </ol>
           </div>
         ) : (
-          <button
-            onClick={subscribeToNotifications}
-            className="w-full py-3 text-base font-medium bg-blue-50 text-blue-700 border border-blue-200 rounded-xl active:bg-blue-100"
-          >
-            🔔 Benachrichtigungen aktivieren
-          </button>
+          <>
+            <button
+              onClick={async () => {
+                const ok = await subscribeToNotifications();
+                if (!ok) setSubscriptionError(true);
+              }}
+              className="w-full py-3 text-base font-medium bg-blue-50 text-blue-700 border border-blue-200 rounded-xl active:bg-blue-100"
+            >
+              🔔 Benachrichtigungen aktivieren
+            </button>
+            {subscriptionError && (
+              isIOS ? (
+                <div className="w-full p-4 bg-blue-50 border border-blue-200 rounded-xl text-sm text-blue-800 space-y-2">
+                  <p className="font-bold">Benachrichtigungen nicht verfügbar</p>
+                  <p>Auf iPhone/iPad muss die App zuerst zum Home-Bildschirm hinzugefügt werden:</p>
+                  <ol className="list-decimal ml-4 space-y-1">
+                    <li>Tippe auf das Teilen-Symbol <strong>⬆</strong> in Safari</li>
+                    <li>Wähle <strong>„Zum Home-Bildschirm"</strong></li>
+                    <li>Öffne die App vom Home-Bildschirm aus</li>
+                    <li>Aktiviere Benachrichtigungen in der App</li>
+                  </ol>
+                </div>
+              ) : (
+                <p className="text-sm text-red-600 text-center">Benachrichtigungen konnten nicht aktiviert werden.</p>
+              )
+            )}
+          </>
         )
       )}
 
