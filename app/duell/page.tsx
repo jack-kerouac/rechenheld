@@ -25,7 +25,9 @@ export default function DuellPage() {
   const [selectedStufe, setSelectedStufe] = useState<Stufe | null>(null);
 
   useEffect(() => {
-    const ios = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const ios =
+      /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (/Mac/.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
     const isStandalone =
       window.matchMedia("(display-mode: standalone)").matches ||
       (navigator as Navigator & { standalone?: boolean }).standalone === true;
