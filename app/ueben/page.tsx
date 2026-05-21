@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { usePlayer } from "@/components/player-provider";
 import { generateCalculations } from "@/lib/math";
-import { CalculationWithInput, Stufe, STUFE_LABELS } from "@/lib/types";
+import { CalculationWithInput, Stufe } from "@/lib/types";
 import { CalculationCard } from "@/components/calculation-card";
 import { Timer } from "@/components/timer";
 import { supabase } from "@/lib/supabase";
@@ -14,6 +14,12 @@ type Phase = "setup" | "solving" | "submitting";
 
 const STUFEN: Stufe[] = [1, 2, 3];
 const COUNT = 10;
+
+const STUFE_SUBTITLES: Record<Stufe, string> = {
+  1: "Plus bis 10",
+  2: "Plus & Minus bis 10",
+  3: "Plus & Minus bis 20",
+};
 
 export default function UebenPage() {
   const { player } = usePlayer();
@@ -88,13 +94,30 @@ export default function UebenPage() {
               <button
                 key={s}
                 onClick={() => setStufe(s)}
-                className={`w-full py-3 text-xl font-bold rounded-xl ${
+                className={`w-full px-4 py-3 rounded-xl flex items-center gap-3 ${
                   stufe === s
                     ? "bg-amber-500 text-white"
                     : "bg-white active:bg-gray-100"
                 }`}
               >
-                Stufe {s}: {STUFE_LABELS[s]}
+                <div className="flex gap-1">
+                  {[1, 2, 3].map((dot) => (
+                    <div
+                      key={dot}
+                      className={`w-2 h-2 rounded-full ${
+                        dot <= s
+                          ? stufe === s ? "bg-white/80" : "bg-amber-500"
+                          : stufe === s ? "bg-white/30" : "bg-amber-200"
+                      }`}
+                    />
+                  ))}
+                </div>
+                <div className="flex flex-col items-start">
+                  <span className="text-xl font-bold">Stufe {s}</span>
+                  <span className={`text-sm ${stufe === s ? "text-white/80" : "text-gray-500"}`}>
+                    {STUFE_SUBTITLES[s]}
+                  </span>
+                </div>
               </button>
             ))}
           </div>
