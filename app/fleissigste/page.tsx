@@ -8,11 +8,11 @@ import Link from "next/link";
 
 const STUFEN: Stufe[] = [1, 2, 3];
 
-function getWeekRange(): string {
+function getWeekRange(offsetWeeks: number): string {
   const now = new Date();
   const daysFromMonday = now.getDay() === 0 ? 6 : now.getDay() - 1;
   const start = new Date(now);
-  start.setDate(now.getDate() - daysFromMonday);
+  start.setDate(now.getDate() - daysFromMonday + offsetWeeks * 7);
   const end = new Date(start);
   end.setDate(start.getDate() + 6);
   const endStr = `${end.getDate()}. ${end.toLocaleDateString("de-DE", { month: "long" })}`;
@@ -30,6 +30,7 @@ function FleissigsteContent() {
   const [stufe, setStufe] = useState<Stufe>(
     STUFEN.includes(initialStufe) ? initialStufe : 1
   );
+  const [prevWeek, setPrevWeek] = useState(false);
   const [entries, setEntries] = useState<PracticeLeaderboardEntry[]>([]);
 
   function updateFilter(newStufe: Stufe) {
@@ -40,11 +41,12 @@ function FleissigsteContent() {
   useEffect(() => {
     loadLeaderboard();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stufe]);
+  }, [stufe, prevWeek]);
 
   async function loadLeaderboard() {
+    const view = prevWeek ? "practice_leaderboard_prev_week" : "practice_leaderboard";
     const { data } = await supabase
-      .from("practice_leaderboard")
+      .from(view)
       .select("*")
       .eq("stufe", stufe)
       .order("rounds_count", { ascending: false })
@@ -52,10 +54,32 @@ function FleissigsteContent() {
     if (data) setEntries(data as PracticeLeaderboardEntry[]);
   }
 
+  const weekLabel = prevWeek ? `Letzte Woche (${getWeekRange(-1)})` : `Diese Woche (${getWeekRange(0)})`;
+
   return (
     <div className="flex flex-col items-center gap-6 pt-8">
       <h1 className="text-3xl font-bold">Fleißigste Helden</h1>
-      <p className="text-lg font-semibold text-blue-600">Diese Woche ({getWeekRange()})</p>
+
+      <div className="flex w-full gap-2">
+        <button
+          onClick={() => setPrevWeek(false)}
+          className={`flex-1 px-3 py-2 font-bold rounded-xl ${
+            !prevWeek ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-600 active:bg-gray-200"
+          }`}
+        >
+          Diese Woche
+        </button>
+        <button
+          onClick={() => setPrevWeek(true)}
+          className={`flex-1 px-3 py-2 font-bold rounded-xl ${
+            prevWeek ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-600 active:bg-gray-200"
+          }`}
+        >
+          Letzte Woche
+        </button>
+      </div>
+
+      <p className="text-lg font-semibold text-blue-600">{weekLabel}</p>
 
       <div className="flex w-full gap-2">
         {STUFEN.map((s) => (
@@ -88,7 +112,7 @@ function FleissigsteContent() {
       <p className="text-sm text-gray-500">Runden mit mindestens 6 von 10 richtig</p>
 
       {entries.length === 0 ? (
-        <p className="text-xl text-gray-400 mt-8">Diese Woche noch keine Einträge!</p>
+        <p className="text-xl text-gray-400 mt-8">{prevWeek ? "Letzte Woche keine Einträge!" : "Diese Woche noch keine Einträge!"}</p>
       ) : (
         <div className="w-full space-y-2">
           {entries.map((entry, i) => (
