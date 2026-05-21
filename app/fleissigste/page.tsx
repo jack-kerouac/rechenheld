@@ -3,7 +3,7 @@
 import { Suspense, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import { PracticeLeaderboardEntry, Stufe, STUFE_LABELS } from "@/lib/types";
+import { PracticeLeaderboardEntry, Stufe } from "@/lib/types";
 import Link from "next/link";
 
 const STUFEN: Stufe[] = [1, 2, 3];
@@ -57,18 +57,30 @@ function FleissigsteContent() {
       <h1 className="text-3xl font-bold">Fleißigste Helden</h1>
       <p className="text-lg font-semibold text-blue-600">Diese Woche ({getWeekRange()})</p>
 
-      <div className="flex flex-col w-full gap-2">
+      <div className="flex w-full gap-2">
         {STUFEN.map((s) => (
           <button
             key={s}
             onClick={() => updateFilter(s)}
-            className={`w-full px-4 py-2 text-lg font-bold rounded-xl ${
+            className={`flex-1 flex flex-col items-center gap-2 px-3 py-3 font-bold rounded-xl ${
               stufe === s
                 ? "bg-yellow-400"
                 : "bg-gray-100 active:bg-gray-200"
             }`}
           >
-            Stufe {s}: {STUFE_LABELS[s]}
+            <div className="flex gap-1">
+              {[1, 2, 3].map((dot) => (
+                <div
+                  key={dot}
+                  className={`w-2 h-2 rounded-full ${
+                    dot <= s
+                      ? stufe === s ? "bg-white/80" : "bg-amber-500"
+                      : stufe === s ? "bg-white/30" : "bg-amber-200"
+                  }`}
+                />
+              ))}
+            </div>
+            <span>Stufe {s}</span>
           </button>
         ))}
       </div>
