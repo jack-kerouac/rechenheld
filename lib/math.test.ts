@@ -59,6 +59,16 @@ describe("generateCalculations", () => {
     }
   });
 
+  it("at most one calculation with a 0 operand per round", () => {
+    for (const stufe of [1, 2, 3] as const) {
+      for (let i = 0; i < 100; i++) {
+        const calcs = generateCalculations(stufe, 10);
+        const zeros = calcs.filter((c) => c.a === 0 || c.b === 0);
+        expect(zeros.length).toBeLessThanOrEqual(1);
+      }
+    }
+  });
+
   it("answers are correct", () => {
     for (const stufe of [1, 2, 3] as const) {
       const calcs = generateCalculations(stufe, 100);

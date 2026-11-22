@@ -6,7 +6,15 @@ export function generateCalculations(
 ): Calculation[] {
   const pool = buildPool(stufe);
   shuffle(pool);
-  return pool.slice(0, count);
+  // Problems with a 0 operand are trivial and make up ~1/3 of the pool; allow at most one per round.
+  const firstZero = pool.find(hasZeroOperand);
+  return pool
+    .filter((c) => c === firstZero || !hasZeroOperand(c))
+    .slice(0, count);
+}
+
+function hasZeroOperand(c: Calculation): boolean {
+  return c.a === 0 || c.b === 0;
 }
 
 function buildPool(stufe: 1 | 2 | 3): Calculation[] {
