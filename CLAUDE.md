@@ -8,7 +8,7 @@ See `justfile`.
 
 ## Deployment
 
-Vercel auto-deployment from GitHub is **not** set up. Run `vercel --prod` manually to deploy.
+Pushing to `main` deploys via GitHub Actions (`.github/workflows/deploy.yml`): Supabase migrations and functions, then Vercel. `just deploy` does the same manually.
 
 ## CLI tools
 
