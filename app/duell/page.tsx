@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { usePlayer } from "@/components/player-provider";
 import { supabase } from "@/lib/supabase";
 import { generateCalculations } from "@/lib/math";
@@ -29,6 +29,7 @@ export default function DuellPage() {
   const [creating, setCreating] = useState(false);
   const [selectedOpponent, setSelectedOpponent] = useState<string>("");
   const [selectedStufe, setSelectedStufe] = useState<Stufe | null>(null);
+  const opponentHeadingRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
     const ios =
@@ -158,7 +159,9 @@ export default function DuellPage() {
         </button>
       ) : (
         <div className="w-full space-y-4 p-4 bg-amber-50 rounded-xl">
-          <h2 className="text-xl font-bold">Gegner wählen:</h2>
+          <h2 ref={opponentHeadingRef} className="text-xl font-bold">
+            Gegner wählen:
+          </h2>
           {selectedOpponent ? (
             <button
               onClick={() => {
@@ -175,7 +178,11 @@ export default function DuellPage() {
               {players.map((p) => (
                 <button
                   key={p.id}
-                  onClick={() => setSelectedOpponent(p.id)}
+                  onClick={() => {
+                    // The list collapses on selection; keep the next step in view.
+                    opponentHeadingRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                    setSelectedOpponent(p.id);
+                  }}
                   className="block w-full py-3 text-xl text-center rounded-xl bg-white active:bg-gray-100"
                 >
                   {p.name}
