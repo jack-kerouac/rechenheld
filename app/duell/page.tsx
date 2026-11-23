@@ -159,21 +159,30 @@ export default function DuellPage() {
       ) : (
         <div className="w-full space-y-4 p-4 bg-amber-50 rounded-xl">
           <h2 className="text-xl font-bold">Gegner wählen:</h2>
-          <div className="space-y-2">
-            {players.map((p) => (
-              <button
-                key={p.id}
-                onClick={() => setSelectedOpponent(p.id)}
-                className={`block w-full py-3 text-xl text-center rounded-xl ${
-                  selectedOpponent === p.id
-                    ? "bg-amber-500 text-white"
-                    : "bg-white active:bg-gray-100"
-                }`}
-              >
-                {p.name}
-              </button>
-            ))}
-          </div>
+          {selectedOpponent ? (
+            <button
+              onClick={() => {
+                setSelectedOpponent("");
+                setSelectedStufe(null);
+              }}
+              className="block w-full py-3 text-xl text-center rounded-xl bg-amber-500 text-white"
+            >
+              {players.find((p) => p.id === selectedOpponent)?.name}{" "}
+              <span className="text-sm text-white/80">(ändern)</span>
+            </button>
+          ) : (
+            <div className="space-y-2">
+              {players.map((p) => (
+                <button
+                  key={p.id}
+                  onClick={() => setSelectedOpponent(p.id)}
+                  className="block w-full py-3 text-xl text-center rounded-xl bg-white active:bg-gray-100"
+                >
+                  {p.name}
+                </button>
+              ))}
+            </div>
+          )}
 
           {selectedOpponent && (
             <>
